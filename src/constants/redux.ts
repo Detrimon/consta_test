@@ -1,0 +1,8 @@
+export const GET_MYTABLE_DATA = 'GET_MYTABLE_DATA';
+export const REQUEST = '_REQUEST';
+export const SUCCESS = '_SUCCESS';
+export const FAILURE = '_FAILURE';
+export const REMOVE_TABLE_ROW = 'REMOVE_TABLE_ROW';
+export const REMOVE_TABLE_ROW_ON_CLIENT = 'REMOVE_TABLE_ROW_ON_CLIENT;';
+export const ADD_TABLE_ROW_ON_CLIENT = 'ADD_TABLE_ROW_ON_CLIENT';
+export const ADD_TABLE_ITEM = 'ADD_TABLE_ITEM';

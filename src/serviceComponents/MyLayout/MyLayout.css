@@ -1,0 +1,22 @@
+.myParentLayout {
+  height: 2000px;
+}
+
+.myTopLayout {
+  height: 200px;
+  background-color: red;
+}
+
+.myMainLayout {
+  height: 2000px;
+  background-color: green;
+}
+
+.myCentralLayout {
+  height: 2000px;
+  background-color: blue;
+}
+
+.mySideLayout {
+  height: 100px;
+}
