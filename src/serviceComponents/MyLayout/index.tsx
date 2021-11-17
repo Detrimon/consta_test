@@ -1,0 +1,1 @@
+export { MyLayout as default } from './MyLayout';

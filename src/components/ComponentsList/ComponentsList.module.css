@@ -1,0 +1,22 @@
+.container {
+}
+
+.header {
+  color: var(--color-typo-primary);
+}
+
+.categoryHeader {
+  color: var(--color-typo-primary);
+}
+
+.list_item {
+  list-style: circle;
+}
+
+.link_item {
+  color: var(--color-typo-link);
+}
+
+.link_item:hover {
+  color: var(--color-typo-link-hover);
+}

@@ -1,0 +1,19 @@
+.myGridClass {
+  border: 1px solid red;
+}
+
+.myGridItemClass {
+  border: 1px solid green;
+}
+
+.bottomFlexGrid {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+@media (max-width: 640px) {
+  .hiddenLowerSmall {
+    display: none;
+  }
+}
