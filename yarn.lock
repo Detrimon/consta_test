@@ -1261,10 +1261,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@consta/uikit@3.7.0":
-  version "3.7.0"
-  resolved "https://registry.yarnpkg.com/@consta/uikit/-/uikit-3.7.0.tgz#e3c0ccb3004d5512e320e77ca7be6b93babc4344"
-  integrity sha512-AXDDJF78NAMXDigP4WRdIa3eYPgNIwQQbDNmwQzvHXJuWxTO7Sp3525UWl/YCE5D1gG88hJgc9qixeIf0LJTXw==
+"@consta/uikit@3.9.3":
+  version "3.9.3"
+  resolved "https://registry.yarnpkg.com/@consta/uikit/-/uikit-3.9.3.tgz#e0cf663385ecb70ec62dc4b6e29a840465b4a6d1"
+  integrity sha512-Yn3UfWqUC8Q1RZ2tb34ZB9Gv3uD0tC6WbEOgMgB6k65XVEjJwI2lc5h/LTw7tlIQu9Xi9RE6GSnT1QjPyfHx2A==
   dependencies:
     "@bem-react/classname" "^1.5.8"
     "@bem-react/classnames" "^1.3.9"

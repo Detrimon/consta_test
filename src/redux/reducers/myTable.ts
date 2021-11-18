@@ -9,7 +9,7 @@ import {
 } from '../../constants/redux';
 
 type TMyTableState = {
-  data: IUser[] | null;
+  data: IUser[] | [];
   error: any;
 };
 
@@ -22,7 +22,7 @@ type TMyTableAction = {
 };
 
 const initialState = {
-  data: null,
+  data: [],
   error: null,
 };
 

@@ -1,11 +1,4 @@
-import {
-  TableColumn,
-  TableRow,
-  TableProps,
-  TableFilters,
-} from '@consta/uikit/Table';
-
-const columns: TableColumn<typeof rows[number]>[] = [
+const columns = [
   {
     title: 'Фамилия',
     accessor: 'surname',
@@ -33,50 +26,7 @@ const columns: TableColumn<typeof rows[number]>[] = [
   },
 ];
 
-export type TBaseRow = TableRow & {
-  id: string;
-  surname: string;
-  name: string;
-  patronymic: string;
-  age: number;
-};
-
-const rows = [
-  {
-    id: '1',
-    surname: 'Иванов',
-    name: 'Иван',
-    actions: 'delete',
-    patronymic: 'Иванович',
-    age: 44,
-  },
-  {
-    id: '2',
-    surname: 'Иванов',
-    name: 'Иван',
-    actions: 'delete',
-    patronymic: 'Иванович',
-    age: 43,
-  },
-  {
-    id: '3',
-    surname: 'Иванов',
-    name: 'Иван',
-    actions: 'delete',
-    patronymic: 'Иванович',
-    age: 55,
-  },
-  {
-    id: '4',
-    surname: 'Иванов',
-    name: 'Иван',
-    actions: 'delete',
-    patronymic: 'Иванович',
-    age: 20,
-  },
-];
-
-const filters: TableFilters<typeof rows[number]> = [
+const filters = [
   {
     id: 'noneFilter',
     name: 'Сбросить фильтр',
@@ -91,8 +41,7 @@ const filters: TableFilters<typeof rows[number]> = [
   },
 ];
 
-export const tableData: TableProps<typeof rows[number]> = {
+export const tableData = {
   columns,
-  rows,
   filters,
 };

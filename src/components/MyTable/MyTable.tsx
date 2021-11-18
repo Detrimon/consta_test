@@ -1,8 +1,13 @@
-import { Table, TableColumn } from '@consta/uikit/Table';
+import {
+  Table,
+  TableColumn,
+  TableControl,
+  TableFilters,
+} from '@consta/uikit/Table';
 import AddDataForm from './AddDataForm';
 import { tableData } from './fixtures';
 import { Button } from '@consta/uikit/Button';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 // @ts-ignore
 import { useKeycloak } from '@react-keycloak/web';
 import { connect } from 'react-redux';
@@ -12,26 +17,69 @@ import {
   removeTableRow,
 } from '../../actions/actionCreators';
 
-import { TBaseRow } from './fixtures';
+import { TBaseRow } from '../../redux/selector';
 import { Modal } from '@consta/uikit/Modal';
+import { IconArrowLeft } from '@consta/uikit/IconArrowLeft';
 
-interface TRow extends TBaseRow {
-  actions: string;
+import styles from './MyTable.module.css';
+import Loader from '../Loader';
+import { getTableRows } from '../../redux/selector';
+
+export interface TRow extends TBaseRow {
+  actions?: string;
 }
 
-// @ts-ignore
-const MyTable = ({ rows, getTableData, removeItem }) => {
+type TMyTable = {
+  rows: TRow[];
+  getTableData: any;
+  removeItem: any;
+};
+
+const filters = tableData.filters as TableFilters<TRow>;
+
+const MyTable = ({ rows, getTableData, removeItem }: TMyTable) => {
   const { keycloak, initialized } = useKeycloak();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hideColumns, setHideColumns] = useState<{ [key: string]: boolean }>({
+    name: false,
+    patronymic: false,
+  });
 
   useEffect(() => {
     getTableData();
   }, [getTableData]);
 
-  if (!tableData || !rows) return null;
+  const columns = useMemo(() => {
+    return tableData.columns.map((column) => {
+      if (!column.accessor) return { ...column };
+      let testColumn = column;
+      return hideColumns.hasOwnProperty(column.accessor)
+        ? {
+            ...column,
+            control: ({ column }: TableControl<TBaseRow>) => {
+              return (
+                <Button
+                  size="xs"
+                  iconSize="s"
+                  view="clear"
+                  onlyIcon
+                  iconLeft={IconArrowLeft}
+                  onClick={() =>
+                    setHideColumns({
+                      ...hideColumns,
+                      [testColumn.accessor]: !hideColumns[testColumn.accessor],
+                    })
+                  }
+                />
+              );
+            },
+            hidden: hideColumns[testColumn.accessor],
+          }
+        : { ...column };
+    });
+  }, [hideColumns]) as TableColumn<TRow>[];
 
-  const columns = tableData.columns;
-  const filters = tableData.filters;
+  if (!tableData || !rows) return <Loader />;
 
   const actionColumn = {
     title: 'Действия',
@@ -54,6 +102,18 @@ const MyTable = ({ rows, getTableData, removeItem }) => {
   return keycloak && initialized && keycloak.authenticated ? (
     <>
       <Button size="s" label={'+'} onClick={() => setIsModalOpen(true)} />
+      <span className={styles.separator}></span>
+      <Button
+        label="Показать все столбцы"
+        size="s"
+        onClick={() => {
+          const updatedHideColumns = Object.keys(hideColumns).reduce(
+            (result, item) => ({ ...result, [item]: false }),
+            {}
+          );
+          setHideColumns(updatedHideColumns);
+        }}
+      />
       <Table
         columns={[...columns, actionColumn]}
         rows={rows}
@@ -67,10 +127,12 @@ const MyTable = ({ rows, getTableData, removeItem }) => {
         <AddDataForm toCloseModal={() => setIsModalOpen(false)} />
       </Modal>
     </>
-  ) : null;
+  ) : (
+    <Loader />
+  );
 };
 const mapStateToProps = (state: RootState) => ({
-  rows: state?.myTable?.data,
+  rows: getTableRows(state),
 });
 
 const mapDispatchToProps = {
