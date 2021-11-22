@@ -3,11 +3,19 @@ import { Form, Input, AutoComplete } from 'antd';
 import { connect } from 'react-redux';
 import { suggestDaDataAddress } from '../../../actions/actionCreators/myTable';
 import { RootState } from '../../../redux/store';
-import { suggestedAddress } from '../../../redux/selector';
-import { data } from '../../../serviceComponents/MyGrid/fixtures';
+import { getFormDataSelector, suggestedAddress } from '../../../redux/selector';
+import { saveFormData } from '../../../actions/actionCreators';
+
+const { TextArea } = Input;
 
 const TIMEOUT = 600;
 let timeoutTimer: any;
+
+const defaultRule = {
+  required: true,
+  message: 'Обязательное поле !!!!!',
+  whitespace: true,
+};
 
 const suggestAddress = (e: any) => {
   const value = e.target.value;
@@ -19,11 +27,17 @@ const initialSelectedAddress = {
   house: '',
 };
 
-const Step2Form = ({ form, aSuggestedAddress, suggestDaDataAddress }: any) => {
-  const [suggestAddressResult, setSuggestAddressResult] = useState([]);
+const Step2Form = ({
+  form,
+  formData,
+  aSuggestedAddress,
+  suggestDaDataAddress,
+  saveFormData,
+}: any) => {
   const [selectedAddress, setSelectedAddress] = useState(
     initialSelectedAddress
   );
+  const [addressAutoCompleteValue, setAddressAutoCompleteValue] = useState('');
 
   const suggestedValue = useMemo(() => {
     return aSuggestedAddress.map((address: any) => ({
@@ -40,13 +54,16 @@ const Step2Form = ({ form, aSuggestedAddress, suggestDaDataAddress }: any) => {
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 12 }}
       fields={[
-        { name: 'inpStreetSuggest', value: selectedAddress.street_with_type },
-        { name: 'inpHouseNumber', value: selectedAddress.house },
+        { name: 'inpStreet', value: formData.inpStreet },
+        { name: 'inpStreetSuggest', value: formData.inpStreetSuggest },
+        { name: 'inpHouseNumber', value: formData.inpHouseNumber },
+        { name: 'inpBuzzer', value: formData.inpBuzzer },
+        { name: 'inpTextArea', value: formData.inpTextArea },
       ]}
     >
       <Form.Item
-        name="inpStreet"
-        label="Улица:"
+        name="inpStreetItem"
+        label="Адрес:"
         rules={[{ required: true, message: 'Обязательное поле' }]}
       >
         <AutoComplete
@@ -58,47 +75,53 @@ const Step2Form = ({ form, aSuggestedAddress, suggestDaDataAddress }: any) => {
             }, TIMEOUT);
           }}
           onSelect={(value, option) => {
-            console.log(value);
-            console.log(option);
-            debugger;
-            setSelectedAddress({
-              house: option.data.house,
-              street_with_type: option.data.street_with_type,
+            // setAddressAutoCompleteValue(option.value);
+            saveFormData({
+              inpHouseNumber: option.data.house,
+              inpStreetSuggest: option.data.street_with_type,
             });
+            // setSelectedAddress({
+            //   inpHouseNumber: option.data.house,
+            //   street_with_type: option.data.street_with_type,
+            // });
           }}
-          placeholder="начните вводить адрес.. "
+          placeholder="Введите адрес доставки"
         >
-          <Input />
+          <Input name="inpStreet" />
         </AutoComplete>
       </Form.Item>
 
-      <Form.Item
-        name="inpStreetSuggest"
-        label="Улица:"
-        rules={[{ required: true, message: 'Обязательное поле' }]}
-        valuePropName="value"
-        initialValue={'sdfsdfsdfs'}
-      >
+      <Form.Item name="inpStreetSuggest" label="Улица:" rules={[defaultRule]}>
         <Input name="myInput" disabled />
       </Form.Item>
 
       <Form.Item
         name="inpHouseNumber"
         label="Номер дома:"
-        rules={[{ required: true, message: 'Обязательное поле' }]}
+        rules={[defaultRule]}
       >
         <Input disabled />
+      </Form.Item>
+
+      <Form.Item name="inpBuzzer" label="Домофон:">
+        <Input />
+      </Form.Item>
+
+      <Form.Item name="inpTextArea" label="Доп. информация">
+        <TextArea />
       </Form.Item>
     </Form>
   );
 };
 
 const mapStateToProps = (state: RootState) => ({
+  formData: getFormDataSelector(state),
   aSuggestedAddress: suggestedAddress(state),
 });
 
 const mapDispatchToProps = {
   suggestDaDataAddress,
+  saveFormData,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Step2Form);

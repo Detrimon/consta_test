@@ -1,6 +1,8 @@
 import { Steps } from '@consta/uikit/Steps';
 import { aSteps as fixtures_steps } from './fixtures';
 import { useState, useMemo } from 'react';
+import { useChangeStep } from '../CustomHooks';
+import { connect } from 'react-redux';
 import { Redirect, useHistory, useLocation } from 'react-router-dom';
 import { Form } from 'antd';
 import styles from './CSteps.module.css';
@@ -8,9 +10,12 @@ import Step1Form from '../Step1Form';
 import Step2Form from '../Step2Form';
 import Step3Form from '../Step3Form';
 import { Route, Switch } from 'react-router-dom';
+import { saveFormData } from '../../../actions/actionCreators/myTable';
+import { Button } from '@consta/uikit/Button';
 
 type TCSteps = {
   aSteps?: TStep[];
+  saveFormData: any;
   // children?: JSX.Element | null;
 };
 
@@ -20,15 +25,17 @@ type TStep = {
   completed?: boolean;
 };
 
-const validateForm = (form: any) => {
-  return form.validateFields();
+let initialLoad = true;
+
+const navToStep = (stepIndex: any, history: any) => {
+  return history.push(`/components/RegistrationForm/Step${stepIndex + 1}`);
 };
 
 const aStepForms = [Step1Form, Step2Form, Step3Form];
 
-const CSteps = ({ aSteps = fixtures_steps }: TCSteps) => {
+const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
   const history = useHistory();
-  const [activeStep, setCurrentStep] = useState<TStep>(aSteps[0]);
+  // const [activeStep, setCurrentStep] = useState<TStep>(aSteps[0]);
 
   const [formStep1] = Form.useForm();
   const [formStep2] = Form.useForm();
@@ -37,6 +44,14 @@ const CSteps = ({ aSteps = fixtures_steps }: TCSteps) => {
   const aForms = useMemo(() => {
     return [formStep1, formStep2, formStep3];
   }, [formStep1, formStep2, formStep3]);
+
+  debugger;
+  const [activeStep, setChangeStep] = useChangeStep(
+    aSteps[0],
+    aSteps,
+    aForms,
+    saveFormData
+  );
 
   const activeStepIndex = useMemo(() => {
     return aSteps.findIndex((item) => item === activeStep);
@@ -53,6 +68,13 @@ const CSteps = ({ aSteps = fixtures_steps }: TCSteps) => {
     });
   }, [aForms]);
 
+  if (initialLoad) {
+    initialLoad = false;
+    history.replace(
+      `/components/RegistrationForm/Step${aSteps.indexOf(activeStep) + 1}`
+    );
+  }
+
   return (
     <>
       <Steps
@@ -65,36 +87,9 @@ const CSteps = ({ aSteps = fixtures_steps }: TCSteps) => {
         getCompleted={(item) => {
           return activeStepIndex > aSteps.indexOf(item);
         }}
-        onChange={({ value }) => {
-          const prevStepIndex = activeStepIndex;
+        onChange={async ({ value }) => {
           const newStepIndex = aSteps.indexOf(value);
-          const offsetToDisable = 1;
-
-          if (newStepIndex > prevStepIndex + offsetToDisable) {
-            return;
-          }
-
-          // Первым делом здесь должна выполняться проверка корректности заполнения формы!!
-          if (newStepIndex > prevStepIndex) {
-            validateForm(aForms[prevStepIndex])
-              .then((formData: any) => {
-                history.push(
-                  `/components/RegistrationForm/Step${newStepIndex + 1}`
-                );
-
-                setCurrentStep(value);
-              })
-              .catch((error: any) => {
-                console.log('Возможно, не все поля заполнены');
-                console.log(error);
-              });
-          } else {
-            history.push(
-              `/components/RegistrationForm/Step${newStepIndex + 1}`
-            );
-
-            setCurrentStep(value);
-          }
+          setChangeStep(newStepIndex);
         }}
       />
       <div className={styles.data_container}>
@@ -106,8 +101,39 @@ const CSteps = ({ aSteps = fixtures_steps }: TCSteps) => {
           />
         </Switch>
       </div>
+      <div className={styles.action_container}>
+        <Button
+          label={'Назад'}
+          size="s"
+          onClick={() => {
+            debugger;
+            const newStepIndex = aSteps.indexOf(activeStep) - 1;
+            console.log(newStepIndex);
+            if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
+              setChangeStep(newStepIndex);
+            }
+          }}
+        />
+        <span style={{ display: 'inline-block', width: '5px' }} />
+        <Button
+          label={'Вперед'}
+          size="s"
+          onClick={() => {
+            debugger;
+            const newStepIndex = aSteps.indexOf(activeStep) + 1;
+            console.log(newStepIndex);
+            if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
+              setChangeStep(newStepIndex);
+            }
+          }}
+        />
+      </div>
     </>
   );
 };
 
-export default CSteps;
+const mapDispatchToProps = {
+  saveFormData,
+};
+
+export default connect(null, mapDispatchToProps)(CSteps);

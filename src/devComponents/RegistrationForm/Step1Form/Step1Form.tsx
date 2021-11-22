@@ -1,5 +1,8 @@
 import { Form, FormInstance, Input, DatePicker, Radio } from 'antd';
 import MaskedInput from 'antd-mask-input';
+import { connect } from 'react-redux';
+import { getFormDataSelector } from '../../../redux/selector';
+import { RootState } from '../../../redux/store';
 
 const checkForWhitespaces = async (_: any, value: any) => {
   const rWhitespace = /[\S]\s{1,}[\S]/;
@@ -20,7 +23,7 @@ const defaultRule = {
   whitespace: true,
 };
 
-const Step1Form = ({ form }: any) => {
+const Step1Form = ({ form, formData }: any) => {
   // const [form] = Form.useForm();
 
   return (
@@ -29,6 +32,15 @@ const Step1Form = ({ form }: any) => {
       name="form1"
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 12 }}
+      fields={[
+        { name: 'inpSurname', value: formData.inpSurname },
+        { name: 'inpName', value: formData.inpName },
+        { name: 'inpPatronymic', value: formData.inpPatronymic },
+        { name: 'pickBirthday', value: formData.pickBirthday },
+        { name: 'chooseGender', value: formData.chooseGender },
+        { name: 'inpPassSeries', value: formData.inpPassSeries },
+        { name: 'inpPassNumber', value: formData.inpPassNumber },
+      ]}
     >
       <Form.Item
         name="inpSurname"
@@ -75,9 +87,9 @@ const Step1Form = ({ form }: any) => {
       </Form.Item>
 
       <Form.Item name="chooseGender" label="Пол:">
-        <Radio.Group value={'horizontal'}>
-          <Radio.Button value="horizontal">мужской</Radio.Button>
-          <Radio.Button value="vertical">женский</Radio.Button>
+        <Radio.Group value={'male'}>
+          <Radio.Button value="male">мужской</Radio.Button>
+          <Radio.Button value="female">женский</Radio.Button>
         </Radio.Group>
       </Form.Item>
 
@@ -115,4 +127,8 @@ const Step1Form = ({ form }: any) => {
   );
 };
 
-export default Step1Form;
+const mapStateToProps = (state: RootState) => ({
+  formData: getFormDataSelector(state),
+});
+
+export default connect(mapStateToProps)(Step1Form);

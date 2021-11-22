@@ -7,4 +7,5 @@ export {
   addTableRowOnClient,
   suggestDaDataAddress,
   updateAddressSuggest,
+  saveFormData,
 } from './myTable';

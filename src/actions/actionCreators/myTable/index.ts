@@ -8,6 +8,7 @@ import {
   ADD_TABLE_ROW_ON_CLIENT,
   SUGGEST_DADATA_ADDRESS,
   UPDATE_ADDRESS_SUGGEST,
+  UPDATE_FORM_DATA,
 } from '../../../constants/redux';
 
 import { IUser } from '../../../http/services/myTable/MyTableService';
@@ -51,4 +52,9 @@ export const suggestDaDataAddress = (query: string) => ({
 export const updateAddressSuggest = (data: any) => ({
   type: UPDATE_ADDRESS_SUGGEST,
   data: data,
+});
+
+export const saveFormData = (data: any) => ({
+  type: UPDATE_FORM_DATA,
+  formData: data,
 });

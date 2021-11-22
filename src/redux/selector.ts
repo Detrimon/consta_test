@@ -20,9 +20,23 @@ export const getTableData = (state: RootState) => {
   return state?.myTable?.data || [];
 };
 
-export const getSuggestedData = (state: RootState) => {
-  return state?.registrationForm.suggestedData || [];
+export const getRegistrationFormSelector = (state: RootState) => {
+  return state.registrationForm;
 };
+
+export const getSuggestedData = createSelector(
+  [getRegistrationFormSelector],
+  (registrationFormData) => {
+    return registrationFormData.suggestedData || [];
+  }
+);
+
+export const getFormDataSelector = createSelector(
+  [getRegistrationFormSelector],
+  (registrationFormData) => {
+    return registrationFormData.formData;
+  }
+);
 
 export const getTableRows = createSelector([getTableData], (tableData) => {
   return tableData.map(
