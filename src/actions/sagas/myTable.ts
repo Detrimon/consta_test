@@ -3,18 +3,21 @@ import { AxiosResponse } from 'axios';
 import { TFormData } from '../../components/MyTable/AddDataForm/AddDataForm';
 import { IUser, TItem } from '../../http/services/myTable/MyTableService';
 import myTableService from '../../http/services/myTable/MyTableService';
+import daDataService from '../../http/services/DaData/DaDataService';
 import { store } from '../../redux/store';
 import {
   getMyTableDataFailure,
   getMyTableDataSuccess,
   removeTableRowOnClient,
   addTableRowOnClient,
+  updateAddressSuggest,
 } from '../actionCreators';
 import {
   GET_MYTABLE_DATA,
   REQUEST,
   REMOVE_TABLE_ROW,
   ADD_TABLE_ITEM,
+  SUGGEST_DADATA_ADDRESS,
 } from '../../constants/redux';
 import { getTableData } from '../../redux/selector';
 
@@ -22,6 +25,7 @@ export function* myTableSaga() {
   yield takeLatest(GET_MYTABLE_DATA + REQUEST, getMyTableData);
   yield takeLatest(REMOVE_TABLE_ROW, removeTableRow);
   yield takeEvery(ADD_TABLE_ITEM, addTableItem);
+  yield takeEvery(SUGGEST_DADATA_ADDRESS, suggestDaDataAddress);
 }
 
 export function* getMyTableData() {
@@ -95,5 +99,24 @@ export function* addTableItem(action: any) {
   } catch (e) {
     console.log('Случилась какая-то ошибка.. ');
     console.dir(e);
+  }
+}
+
+export function* suggestDaDataAddress(action: any) {
+  const { query } = action;
+
+  try {
+    const response: AxiosResponse<any, any> = yield call(
+      daDataService.suggestAddress,
+      query
+    );
+    if (response.status === 200) {
+      const aSuggestions = response.data.suggestions;
+      yield put(updateAddressSuggest(aSuggestions));
+      return;
+    }
+    throw new Error('response.status не равен 200.. ');
+  } catch (error) {
+    console.log('Ууупс, какая-то ошибка.');
   }
 }

@@ -6,6 +6,8 @@ import {
   REMOVE_TABLE_ROW,
   REMOVE_TABLE_ROW_ON_CLIENT,
   ADD_TABLE_ROW_ON_CLIENT,
+  SUGGEST_DADATA_ADDRESS,
+  UPDATE_ADDRESS_SUGGEST,
 } from '../../../constants/redux';
 
 import { IUser } from '../../../http/services/myTable/MyTableService';
@@ -39,4 +41,14 @@ export const addTableRowOnClient = (currentRows: any, item: any) => ({
   type: ADD_TABLE_ROW_ON_CLIENT,
   rows: currentRows,
   item: item,
+});
+
+export const suggestDaDataAddress = (query: string) => ({
+  type: SUGGEST_DADATA_ADDRESS,
+  query: query,
+});
+
+export const updateAddressSuggest = (data: any) => ({
+  type: UPDATE_ADDRESS_SUGGEST,
+  data: data,
 });

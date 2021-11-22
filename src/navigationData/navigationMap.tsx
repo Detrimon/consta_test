@@ -12,12 +12,14 @@ import MyAttachment from '../components/MyAttachment';
 import MySteps from '../navComponents/MySteps';
 import MyDialog from '../components/MyDialog';
 import MyModal from '../components/MyModal';
+import RegistrationForm from '../devComponents/RegistrationForm';
 
 import { IconLaptop } from '@consta/uikit/IconLaptop';
 import { IconBento } from '@consta/uikit/IconBento';
 import { IconProps } from '@consta/uikit/Icon';
 
 export type TNavMap = {
+  isExact?: boolean;
   icon?: IconProps;
   label: string;
   category: string;
@@ -33,6 +35,7 @@ const oNavMap = [
     path: '/',
     label: 'Home',
     component: Home,
+    isExact: true,
   },
   {
     icon: IconBento,
@@ -41,6 +44,7 @@ const oNavMap = [
     label: 'Components',
     component: ComponentsList,
     attributes: { oCategories },
+    isExact: true,
   },
   {
     category: 'service',
@@ -108,6 +112,12 @@ const oNavMap = [
     path: '/components/MyModal',
     label: 'Modal',
     component: MyModal,
+  },
+  {
+    category: 'component',
+    path: '/components/RegistrationForm',
+    label: 'RegistrationForm',
+    component: RegistrationForm,
   },
 ] as TNavMap[];
 

@@ -26,7 +26,7 @@ const App = () => {
   const routes = navigationMap.map((item, index) => {
     const CustomComponent: any = item.component;
     return (
-      <Route exact path={item.path} key={index}>
+      <Route exact={item.isExact || false} path={item.path} key={index}>
         <CustomComponent {...item.attributes} />
       </Route>
     );
