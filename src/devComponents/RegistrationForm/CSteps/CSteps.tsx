@@ -1,9 +1,9 @@
 import { Steps } from '@consta/uikit/Steps';
 import { aSteps as fixtures_steps } from './fixtures';
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useChangeStep } from '../CustomHooks';
 import { connect } from 'react-redux';
-import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { Form } from 'antd';
 import styles from './CSteps.module.css';
 import Step1Form from '../Step1Form';
@@ -16,7 +16,6 @@ import { Button } from '@consta/uikit/Button';
 type TCSteps = {
   aSteps?: TStep[];
   saveFormData: any;
-  // children?: JSX.Element | null;
 };
 
 type TStep = {
@@ -27,15 +26,10 @@ type TStep = {
 
 let initialLoad = true;
 
-const navToStep = (stepIndex: any, history: any) => {
-  return history.push(`/components/RegistrationForm/Step${stepIndex + 1}`);
-};
-
 const aStepForms = [Step1Form, Step2Form, Step3Form];
 
 const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
   const history = useHistory();
-  // const [activeStep, setCurrentStep] = useState<TStep>(aSteps[0]);
 
   const [formStep1] = Form.useForm();
   const [formStep2] = Form.useForm();
@@ -45,7 +39,6 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
     return [formStep1, formStep2, formStep3];
   }, [formStep1, formStep2, formStep3]);
 
-  debugger;
   const [activeStep, setChangeStep] = useChangeStep(
     aSteps[0],
     aSteps,
@@ -106,9 +99,7 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
           label={'Назад'}
           size="s"
           onClick={() => {
-            debugger;
             const newStepIndex = aSteps.indexOf(activeStep) - 1;
-            console.log(newStepIndex);
             if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
               setChangeStep(newStepIndex);
             }
@@ -119,9 +110,7 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
           label={'Вперед'}
           size="s"
           onClick={() => {
-            debugger;
             const newStepIndex = aSteps.indexOf(activeStep) + 1;
-            console.log(newStepIndex);
             if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
               setChangeStep(newStepIndex);
             }

@@ -34,11 +34,6 @@ const Step2Form = ({
   suggestDaDataAddress,
   saveFormData,
 }: any) => {
-  const [selectedAddress, setSelectedAddress] = useState(
-    initialSelectedAddress
-  );
-  const [addressAutoCompleteValue, setAddressAutoCompleteValue] = useState('');
-
   const suggestedValue = useMemo(() => {
     return aSuggestedAddress.map((address: any) => ({
       label: address.value,
@@ -74,16 +69,11 @@ const Step2Form = ({
               suggestDaDataAddress(value);
             }, TIMEOUT);
           }}
-          onSelect={(value, option) => {
-            // setAddressAutoCompleteValue(option.value);
+          onSelect={(_, option) => {
             saveFormData({
               inpHouseNumber: option.data.house,
               inpStreetSuggest: option.data.street_with_type,
             });
-            // setSelectedAddress({
-            //   inpHouseNumber: option.data.house,
-            //   street_with_type: option.data.street_with_type,
-            // });
           }}
           placeholder="Введите адрес доставки"
         >

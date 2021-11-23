@@ -1,4 +1,4 @@
-import { Form, FormInstance, Input, DatePicker, Radio } from 'antd';
+import { Form, Input, DatePicker, Radio } from 'antd';
 import MaskedInput from 'antd-mask-input';
 import { connect } from 'react-redux';
 import { getFormDataSelector } from '../../../redux/selector';
@@ -7,7 +7,6 @@ import { RootState } from '../../../redux/store';
 const checkForWhitespaces = async (_: any, value: any) => {
   const rWhitespace = /[\S]\s{1,}[\S]/;
   const isWhitespaceBetweenWords = rWhitespace.test(value);
-  console.log(isWhitespaceBetweenWords);
 
   if (isWhitespaceBetweenWords) {
     return Promise.reject(
@@ -24,8 +23,6 @@ const defaultRule = {
 };
 
 const Step1Form = ({ form, formData }: any) => {
-  // const [form] = Form.useForm();
-
   return (
     <Form
       form={form}

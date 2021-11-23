@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 const navToStep = (stepIndex: any, history: any) => {
@@ -24,8 +24,6 @@ export const useChangeStep = (
     );
     const stepValue = aSteps[newStepIndex];
     const formValues = aForms[activeStepIndex].getFieldsValue();
-
-    // prevStepIndex (current)  :: newStepIndex  ::  aSteps :: aForms[prevStepIndex] - form hook :: saveFormData  :: history :: setCurrentStep
 
     const offsetToDisable = 1;
     if (newStepIndex > activeStepIndex + offsetToDisable) {
