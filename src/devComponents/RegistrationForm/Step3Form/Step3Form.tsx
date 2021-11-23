@@ -1,29 +1,27 @@
 import { Form, Input } from 'antd';
 import MaskedInput from 'antd-mask-input';
 
-const defaultRule = {
-  required: true,
-  message: 'Обязательное поле !!!!!',
-  whitespace: true,
-};
+import { defaultRule } from '../constants/rules';
+import { idFormCreditCard, inpCreditCard, inpCode } from './idNames';
+import { LABELS, ERROR_MESSAGES } from '../constants';
 
 const Step3Form = ({ form }: any) => {
   return (
     <Form
       form={form}
-      name="form3"
+      name={idFormCreditCard}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 12 }}
     >
       <Form.Item
-        label="Кредитка"
+        label={LABELS.CREDIT_CARD}
         style={{
           marginBottom: 0,
         }}
       >
         <Form.Item
-          name="inpCreditCard"
-          label="Номер:"
+          name={inpCreditCard}
+          label={LABELS.CREDIT_CARD_NUMBER}
           rules={[defaultRule]}
           style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
         >
@@ -31,8 +29,8 @@ const Step3Form = ({ form }: any) => {
         </Form.Item>
 
         <Form.Item
-          name="inpCode"
-          label="Код:"
+          name={inpCode}
+          label={LABELS.CREDIT_CARD_PIN}
           rules={[
             defaultRule,
             {
@@ -40,7 +38,7 @@ const Step3Form = ({ form }: any) => {
                 const rChecker = /^\d{3,3}$/;
                 if (!rChecker.test(value)) {
                   return Promise.reject(
-                    new Error('пин-код состоит из 3х цифр')
+                    new Error(ERROR_MESSAGES.PIN_HAS_3_DIGITS)
                   );
                 }
               },

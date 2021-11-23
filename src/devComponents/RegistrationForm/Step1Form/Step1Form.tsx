@@ -1,47 +1,63 @@
+import { connect } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { getFormDataSelector } from '../../../redux/selector';
+
+import {
+  FORMATS,
+  GENDER,
+  ERROR_MESSAGES,
+  LABELS,
+  TXT_ERR_BIRTHDAY_NOT_CHOOSEN,
+  TXT_ERR_PASSPORT_SERIES,
+  TXT_ERR_PASSPORT_NUMBER,
+} from '../constants';
+
+import {
+  inpSurname,
+  inpName,
+  inpPatronymic,
+  pickBirthday,
+  chooseGender,
+  inpPassSeries,
+  inpPassNumber,
+  idFormPersonData,
+} from './idNames';
+
+import { defaultRule } from '../constants/rules';
+
 import { Form, Input, DatePicker, Radio } from 'antd';
 import MaskedInput from 'antd-mask-input';
-import { connect } from 'react-redux';
-import { getFormDataSelector } from '../../../redux/selector';
-import { RootState } from '../../../redux/store';
 
 const checkForWhitespaces = async (_: any, value: any) => {
   const rWhitespace = /[\S]\s{1,}[\S]/;
   const isWhitespaceBetweenWords = rWhitespace.test(value);
 
   if (isWhitespaceBetweenWords) {
-    return Promise.reject(
-      new Error('Значение не должно содержать пробелов между словами')
-    );
+    return Promise.reject(new Error(ERROR_MESSAGES.WHITESPACES_IN_TEXT));
   }
   return true;
-};
-
-const defaultRule = {
-  required: true,
-  message: 'Обязательное поле !!!!!',
-  whitespace: true,
 };
 
 const Step1Form = ({ form, formData }: any) => {
   return (
     <Form
       form={form}
-      name="form1"
+      name={idFormPersonData}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 12 }}
       fields={[
-        { name: 'inpSurname', value: formData.inpSurname },
-        { name: 'inpName', value: formData.inpName },
-        { name: 'inpPatronymic', value: formData.inpPatronymic },
-        { name: 'pickBirthday', value: formData.pickBirthday },
-        { name: 'chooseGender', value: formData.chooseGender },
-        { name: 'inpPassSeries', value: formData.inpPassSeries },
-        { name: 'inpPassNumber', value: formData.inpPassNumber },
+        { name: inpSurname, value: formData.inpSurname },
+        { name: inpName, value: formData.inpName },
+        { name: inpPatronymic, value: formData.inpPatronymic },
+        { name: pickBirthday, value: formData.pickBirthday },
+        { name: chooseGender, value: formData.chooseGender },
+        { name: inpPassSeries, value: formData.inpPassSeries },
+        { name: inpPassNumber, value: formData.inpPassNumber },
       ]}
     >
       <Form.Item
-        name="inpSurname"
-        label="Фамилия:"
+        name={inpSurname}
+        label={LABELS.SURNAME}
         rules={[
           defaultRule,
           {
@@ -53,53 +69,53 @@ const Step1Form = ({ form, formData }: any) => {
       </Form.Item>
 
       <Form.Item
-        name="inpName"
-        label="Имя:"
+        name={inpName}
+        label={LABELS.NAME}
         rules={[defaultRule, { validator: checkForWhitespaces }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
-        name="inpPatronymic"
-        label="Отчество:"
+        name={inpPatronymic}
+        label={LABELS.PATRONYMIC}
         rules={[defaultRule, { validator: checkForWhitespaces }]}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
-        name="pickBirthday"
-        label="Дата рождения:"
+        name={pickBirthday}
+        label={LABELS.BIRTHDAY}
         required
         rules={[
           {
             type: 'object' as const,
             required: true,
-            message: 'Выберите дату рождения',
+            message: TXT_ERR_BIRTHDAY_NOT_CHOOSEN,
           },
         ]}
       >
-        <DatePicker format="DD.MM.YYYY" />
+        <DatePicker format={FORMATS.DATE} />
       </Form.Item>
 
-      <Form.Item name="chooseGender" label="Пол:">
-        <Radio.Group value={'male'}>
-          <Radio.Button value="male">мужской</Radio.Button>
-          <Radio.Button value="female">женский</Radio.Button>
+      <Form.Item name={chooseGender} label={LABELS.GENDER}>
+        <Radio.Group value={GENDER.MALE}>
+          <Radio.Button value={GENDER.MALE}>{GENDER.MALE}</Radio.Button>
+          <Radio.Button value={GENDER.FEMALE}>{GENDER.FEMALE}</Radio.Button>
         </Radio.Group>
       </Form.Item>
 
       <Form.Item
-        label="Паспорт"
+        label={LABELS.PASSPORT}
         required
         style={{
           marginBottom: 0,
         }}
       >
         <Form.Item
-          name="inpPassSeries"
-          rules={[{ required: true, message: 'Введите серию паспорта' }]}
+          name={inpPassSeries}
+          rules={[{ required: true, message: TXT_ERR_PASSPORT_SERIES }]}
           style={{
             display: 'inline-block',
             width: 'calc(30% - 8px)',
@@ -109,8 +125,8 @@ const Step1Form = ({ form, formData }: any) => {
         </Form.Item>
 
         <Form.Item
-          name="inpPassNumber"
-          rules={[{ required: true, message: 'Введите номер паспорта' }]}
+          name={inpPassNumber}
+          rules={[{ required: true, message: TXT_ERR_PASSPORT_NUMBER }]}
           style={{
             display: 'inline-block',
             marginLeft: '8px',

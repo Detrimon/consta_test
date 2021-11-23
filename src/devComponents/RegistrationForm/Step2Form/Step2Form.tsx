@@ -1,31 +1,28 @@
-import { useState, useMemo } from 'react';
-import { Form, Input, AutoComplete } from 'antd';
+import { useMemo } from 'react';
 import { connect } from 'react-redux';
-import { suggestDaDataAddress } from '../../../actions/actionCreators/myTable';
 import { RootState } from '../../../redux/store';
 import { getFormDataSelector, suggestedAddress } from '../../../redux/selector';
-import { saveFormData } from '../../../actions/actionCreators';
+import { TIMEOUT_600, LABELS, PLACEHOLDERS } from '../constants';
+import {
+  saveFormData,
+  suggestDaDataAddress,
+} from '../../../actions/actionCreators';
+import { defaultRule } from '../constants/rules';
+import {
+  inpStreet,
+  inpStreetItem,
+  inpStreetSuggest,
+  inpHouseNumber,
+  inpBuzzer,
+  inpTextArea,
+  idFormAddress,
+} from './idNames';
+
+import { Form, Input, AutoComplete } from 'antd';
 
 const { TextArea } = Input;
 
-const TIMEOUT = 600;
 let timeoutTimer: any;
-
-const defaultRule = {
-  required: true,
-  message: 'Обязательное поле !!!!!',
-  whitespace: true,
-};
-
-const suggestAddress = (e: any) => {
-  const value = e.target.value;
-  suggestDaDataAddress(value);
-};
-
-const initialSelectedAddress = {
-  street_with_type: '',
-  house: '',
-};
 
 const Step2Form = ({
   form,
@@ -45,21 +42,21 @@ const Step2Form = ({
   return (
     <Form
       form={form}
-      name="form2"
+      name={idFormAddress}
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 12 }}
       fields={[
-        { name: 'inpStreet', value: formData.inpStreet },
-        { name: 'inpStreetSuggest', value: formData.inpStreetSuggest },
-        { name: 'inpHouseNumber', value: formData.inpHouseNumber },
-        { name: 'inpBuzzer', value: formData.inpBuzzer },
-        { name: 'inpTextArea', value: formData.inpTextArea },
+        { name: inpStreet, value: formData.inpStreet },
+        { name: inpStreetSuggest, value: formData.inpStreetSuggest },
+        { name: inpHouseNumber, value: formData.inpHouseNumber },
+        { name: inpBuzzer, value: formData.inpBuzzer },
+        { name: inpTextArea, value: formData.inpTextArea },
       ]}
     >
       <Form.Item
-        name="inpStreetItem"
-        label="Адрес:"
-        rules={[{ required: true, message: 'Обязательное поле' }]}
+        name={inpStreetItem}
+        label={LABELS.ADDRESS}
+        rules={[defaultRule]}
       >
         <AutoComplete
           options={suggestedValue}
@@ -67,7 +64,7 @@ const Step2Form = ({
             clearTimeout(timeoutTimer);
             timeoutTimer = setTimeout(() => {
               suggestDaDataAddress(value);
-            }, TIMEOUT);
+            }, TIMEOUT_600);
           }}
           onSelect={(_, option) => {
             saveFormData({
@@ -75,29 +72,33 @@ const Step2Form = ({
               inpStreetSuggest: option.data.street_with_type,
             });
           }}
-          placeholder="Введите адрес доставки"
+          placeholder={PLACEHOLDERS.INPUT_DELIVERY_ADDRESS}
         >
-          <Input name="inpStreet" />
+          <Input name={inpStreet} />
         </AutoComplete>
       </Form.Item>
 
-      <Form.Item name="inpStreetSuggest" label="Улица:" rules={[defaultRule]}>
-        <Input name="myInput" disabled />
-      </Form.Item>
-
       <Form.Item
-        name="inpHouseNumber"
-        label="Номер дома:"
+        name={inpStreetSuggest}
+        label={LABELS.STREET}
         rules={[defaultRule]}
       >
         <Input disabled />
       </Form.Item>
 
-      <Form.Item name="inpBuzzer" label="Домофон:">
+      <Form.Item
+        name={inpHouseNumber}
+        label={LABELS.HOUSENUMBER}
+        rules={[defaultRule]}
+      >
+        <Input disabled />
+      </Form.Item>
+
+      <Form.Item name={inpBuzzer} label={LABELS.BUZZER}>
         <Input />
       </Form.Item>
 
-      <Form.Item name="inpTextArea" label="Доп. информация">
+      <Form.Item name={inpTextArea} label={LABELS.ADD_INFO}>
         <TextArea />
       </Form.Item>
     </Form>

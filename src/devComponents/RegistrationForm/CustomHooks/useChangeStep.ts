@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const navToStep = (stepIndex: any, history: any) => {
-  return history.push(`/components/RegistrationForm/Step${stepIndex + 1}`);
+import { ERROR_MESSAGES, REG_FORM_BASE_PATH, STEP_PATH } from '../constants';
+
+const navToStep = (stepIndex: number, history: any) => {
+  return history.push(`${REG_FORM_BASE_PATH}/${STEP_PATH}${stepIndex + 1}`);
 };
 
 export const useChangeStep = (
@@ -43,7 +45,7 @@ export const useChangeStep = (
       navToStep(newStepIndex, history);
       setCurrentStep(stepValue);
     } catch (error) {
-      console.log('Возможно, не все поля заполнены');
+      console.log(ERROR_MESSAGES.NOT_ALL_FIELDS_FIELDS);
       console.log(error);
     }
   };

@@ -1,28 +1,25 @@
-import { Steps } from '@consta/uikit/Steps';
-import { aSteps as fixtures_steps } from './fixtures';
 import { useMemo } from 'react';
-import { useChangeStep } from '../CustomHooks';
 import { connect } from 'react-redux';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, Route, Switch } from 'react-router-dom';
+
+import { saveFormData } from '../../../actions/actionCreators/myTable';
+
+import { Steps } from '@consta/uikit/Steps';
+import { Button } from '@consta/uikit/Button';
 import { Form } from 'antd';
-import styles from './CSteps.module.css';
+
+import { useChangeStep } from '../CustomHooks';
+
+import { aSteps as fixtures_steps } from './fixtures';
 import Step1Form from '../Step1Form';
 import Step2Form from '../Step2Form';
 import Step3Form from '../Step3Form';
-import { Route, Switch } from 'react-router-dom';
-import { saveFormData } from '../../../actions/actionCreators/myTable';
-import { Button } from '@consta/uikit/Button';
 
-type TCSteps = {
-  aSteps?: TStep[];
-  saveFormData: any;
-};
+import styles from './CSteps.module.css';
 
-type TStep = {
-  label: string;
-  disabled?: boolean;
-  completed?: boolean;
-};
+import { TCSteps } from '../types';
+
+import { REG_FORM_BASE_PATH, STEP_PATH, LABELS } from '../constants';
 
 let initialLoad = true;
 
@@ -54,7 +51,7 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
     return aStepForms.map((_, index) => {
       const StepForm = aStepForms[index];
       return (
-        <Route exact path={`/components/RegistrationForm/Step${index + 1}`}>
+        <Route exact path={`${REG_FORM_BASE_PATH}/${STEP_PATH}${index + 1}`}>
           <StepForm form={aForms[index]} />
         </Route>
       );
@@ -64,7 +61,7 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
   if (initialLoad) {
     initialLoad = false;
     history.replace(
-      `/components/RegistrationForm/Step${aSteps.indexOf(activeStep) + 1}`
+      `${REG_FORM_BASE_PATH}/${STEP_PATH}${aSteps.indexOf(activeStep) + 1}`
     );
   }
 
@@ -80,7 +77,7 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
         getCompleted={(item) => {
           return activeStepIndex > aSteps.indexOf(item);
         }}
-        onChange={async ({ value }) => {
+        onChange={({ value }) => {
           const newStepIndex = aSteps.indexOf(value);
           setChangeStep(newStepIndex);
         }}
@@ -89,14 +86,14 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
         <Switch>
           {renderRoutes}
           <Redirect
-            from="/components/RegistrationForm"
-            to={'/components/RegistrationForm/Step1'}
+            from={REG_FORM_BASE_PATH}
+            to={`${REG_FORM_BASE_PATH}/${STEP_PATH}1`}
           />
         </Switch>
       </div>
       <div className={styles.action_container}>
         <Button
-          label={'Назад'}
+          label={LABELS.BACK}
           size="s"
           onClick={() => {
             const newStepIndex = aSteps.indexOf(activeStep) - 1;
@@ -105,9 +102,9 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
             }
           }}
         />
-        <span style={{ display: 'inline-block', width: '5px' }} />
+        <span className={styles.separator} />
         <Button
-          label={'Вперед'}
+          label={LABELS.FORWARD}
           size="s"
           onClick={() => {
             const newStepIndex = aSteps.indexOf(activeStep) + 1;
