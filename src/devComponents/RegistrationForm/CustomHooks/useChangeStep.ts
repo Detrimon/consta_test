@@ -1,18 +1,16 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
+
+import { FormInstance } from 'antd';
 
 import { ERROR_MESSAGES, REG_FORM_BASE_PATH, STEP_PATH } from '../constants';
 
-const navToStep = (stepIndex: number, history: any) => {
-  return history.push(`${REG_FORM_BASE_PATH}/${STEP_PATH}${stepIndex + 1}`);
-};
-
-export const useChangeStep = (
-  initialStep: any,
-  steps: any,
-  forms: any,
+export const useChangeStep = <T>(
+  initialStep: T,
+  steps: T[],
+  forms: FormInstance[],
   fnSaveFormData: any
-) => {
+): [T, (newStepIndex: number) => Promise<void>] => {
   const aSteps = steps;
   const aForms = forms;
   const saveFormData = fnSaveFormData;
@@ -20,10 +18,14 @@ export const useChangeStep = (
   const [activeStep, setCurrentStep] = useState(initialStep);
   const history = useHistory();
 
-  const setChangeStep = async (newStepIndex: any) => {
-    const activeStepIndex = aSteps.findIndex(
-      (item: any) => item === activeStep
-    );
+  const navToStep = useMemo(() => {
+    return (stepIndex: number) => {
+      return history.push(`${REG_FORM_BASE_PATH}/${STEP_PATH}${stepIndex + 1}`);
+    };
+  }, [history]);
+
+  const setChangeStep = async (newStepIndex: number) => {
+    const activeStepIndex = aSteps.findIndex((item) => item === activeStep);
     const stepValue = aSteps[newStepIndex];
     const formValues = aForms[activeStepIndex].getFieldsValue();
 
@@ -34,7 +36,7 @@ export const useChangeStep = (
 
     if (newStepIndex < activeStepIndex) {
       saveFormData(formValues);
-      navToStep(newStepIndex, history);
+      navToStep(newStepIndex);
       setCurrentStep(stepValue);
       return;
     }
@@ -42,7 +44,7 @@ export const useChangeStep = (
     try {
       const formData = await aForms[activeStepIndex].validateFields();
       saveFormData(formData);
-      navToStep(newStepIndex, history);
+      navToStep(newStepIndex);
       setCurrentStep(stepValue);
     } catch (error) {
       console.log(ERROR_MESSAGES.NOT_ALL_FIELDS_FIELDS);

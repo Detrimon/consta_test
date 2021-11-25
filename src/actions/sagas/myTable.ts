@@ -2,6 +2,7 @@ import { takeLatest, put, call, takeEvery } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
 import { TFormData } from '../../components/MyTable/AddDataForm/AddDataForm';
 import { IUser, TItem } from '../../http/services/myTable/MyTableService';
+import { ISuggestions } from '../../http/services/DaData/DaDataService';
 import myTableService from '../../http/services/myTable/MyTableService';
 import daDataService from '../../http/services/DaData/DaDataService';
 import { store } from '../../redux/store';
@@ -20,6 +21,7 @@ import {
   SUGGEST_DADATA_ADDRESS,
 } from '../../constants/redux';
 import { getTableData } from '../../redux/selector';
+import { suggestDaDataAddress as suggestDaDataAddress_ActionCreator } from '../actionCreators';
 
 export function* myTableSaga() {
   yield takeLatest(GET_MYTABLE_DATA + REQUEST, getMyTableData);
@@ -102,13 +104,15 @@ export function* addTableItem(action: any) {
   }
 }
 
-export function* suggestDaDataAddress(action: any) {
-  const { query } = action;
+export function* suggestDaDataAddress(
+  action: ReturnType<typeof suggestDaDataAddress_ActionCreator>
+) {
+  const { payload } = action;
 
   try {
-    const response: AxiosResponse<any, any> = yield call(
+    const response: AxiosResponse<ISuggestions, any> = yield call(
       daDataService.suggestAddress,
-      query
+      payload
     );
     if (response.status === 200) {
       const aSuggestions = response.data.suggestions;

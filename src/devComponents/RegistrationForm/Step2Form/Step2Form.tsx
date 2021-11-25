@@ -1,12 +1,6 @@
 import { useMemo } from 'react';
-import { connect } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { getFormDataSelector, suggestedAddress } from '../../../redux/selector';
+import { connector, TPropsFromRedux } from './connector';
 import { TIMEOUT_600, LABELS, PLACEHOLDERS } from '../constants';
-import {
-  saveFormData,
-  suggestDaDataAddress,
-} from '../../../actions/actionCreators';
 import { defaultRule } from '../constants/rules';
 import {
   inpStreet,
@@ -20,9 +14,11 @@ import {
 
 import { Form, Input, AutoComplete } from 'antd';
 
+import { TStep2Form } from '../types';
+
 const { TextArea } = Input;
 
-let timeoutTimer: any;
+let timeoutTimer: ReturnType<typeof setTimeout>;
 
 const Step2Form = ({
   form,
@@ -30,9 +26,10 @@ const Step2Form = ({
   aSuggestedAddress,
   suggestDaDataAddress,
   saveFormData,
-}: any) => {
+}: TStep2Form & TPropsFromRedux) => {
+  debugger;
   const suggestedValue = useMemo(() => {
-    return aSuggestedAddress.map((address: any) => ({
+    return aSuggestedAddress.map((address) => ({
       label: address.value,
       value: address.value,
       data: address.data,
@@ -46,7 +43,7 @@ const Step2Form = ({
       labelCol={{ span: 6 }}
       wrapperCol={{ span: 12 }}
       fields={[
-        { name: inpStreet, value: formData.inpStreet },
+        { name: inpStreet, value: formData.inpStreetItem },
         { name: inpStreetSuggest, value: formData.inpStreetSuggest },
         { name: inpHouseNumber, value: formData.inpHouseNumber },
         { name: inpBuzzer, value: formData.inpBuzzer },
@@ -105,14 +102,4 @@ const Step2Form = ({
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  formData: getFormDataSelector(state),
-  aSuggestedAddress: suggestedAddress(state),
-});
-
-const mapDispatchToProps = {
-  suggestDaDataAddress,
-  saveFormData,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Step2Form);
+export default connector(Step2Form);

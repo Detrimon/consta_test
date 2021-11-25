@@ -3,8 +3,10 @@ import { breadcrumbs } from './breadcrumbs';
 import { registrationForm } from './registrationForm';
 import { myTable } from './myTable';
 
-export default combineReducers({
+const rootReducer = combineReducers({
   breadcrumbs,
   myTable,
   registrationForm,
 });
+
+export default rootReducer;

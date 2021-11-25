@@ -1,36 +1,33 @@
+import { UFormSteps } from '../../devComponents/RegistrationForm/types';
+
 import {
-  UPDATE_ADDRESS_SUGGEST,
-  UPDATE_FORM_DATA,
-} from '../../constants/redux';
+  saveFormData,
+  updateAddressSuggest,
+} from '../../actions/actionCreators';
 
-const initialData = {
+import {} from '../../constants/redux';
+import { UnionToIntersection } from '@reduxjs/toolkit/dist/tsHelpers';
+import { createReducer } from '@reduxjs/toolkit';
+import { TSuggestion } from '../../http/services/DaData/DaDataService';
+
+export type TRegFormFormData = UnionToIntersection<UFormSteps>;
+
+export type TRegFormState = {
+  suggestedData: TSuggestion[];
+  formData: TRegFormFormData;
+};
+
+const initialData: TRegFormState = {
   suggestedData: [],
-  formData: {
-    // Form 1 data - User Data
-    inpSurname: '',
-    inpName: '',
-    inpPatronymic: '',
-    pickBirthday: null,
-    chooseGender: undefined,
-    inpPassSeries: '',
-    inpPassNumber: '',
-    // Form 2 data - Delivery
-  },
+  formData: {},
 };
 
-export const registrationForm = (state = initialData, action: any) => {
-  const { type, data, formData } = action;
-
-  switch (type) {
-    case UPDATE_ADDRESS_SUGGEST:
-      return { ...state, suggestedData: data };
-    case UPDATE_FORM_DATA:
-      return {
-        ...state,
-        formData: { ...state.formData, ...formData },
-      };
-
-    default:
-      return state;
-  }
-};
+export const registrationForm = createReducer(initialData, (builder) => {
+  builder
+    .addCase(updateAddressSuggest, (state, action) => {
+      state.suggestedData = [...action.payload];
+    })
+    .addCase(saveFormData, (state, action) => {
+      state.formData = { ...state.formData, ...action.payload };
+    });
+});

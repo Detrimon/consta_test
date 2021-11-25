@@ -5,7 +5,9 @@ import { defaultRule } from '../constants/rules';
 import { idFormCreditCard, inpCreditCard, inpCode } from './idNames';
 import { LABELS, ERROR_MESSAGES } from '../constants';
 
-const Step3Form = ({ form }: any) => {
+import { TStep3Form } from '../types';
+
+const Step3Form = ({ form }: TStep3Form) => {
   return (
     <Form
       form={form}

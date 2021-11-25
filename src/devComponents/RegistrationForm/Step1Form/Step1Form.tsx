@@ -1,13 +1,13 @@
-import { connect } from 'react-redux';
-import { RootState } from '../../../redux/store';
-import { getFormDataSelector } from '../../../redux/selector';
+import { connector, TPropsFromRedux } from './connector';
+
+import { Rule } from 'antd/lib/form';
 
 import {
   FORMATS,
   GENDER,
   ERROR_MESSAGES,
   LABELS,
-  TXT_ERR_BIRTHDAY_NOT_CHOOSEN,
+  TXT_ERR_BIRTHDAY_NOT_CHOOSE,
   TXT_ERR_PASSPORT_SERIES,
   TXT_ERR_PASSPORT_NUMBER,
 } from '../constants';
@@ -27,18 +27,19 @@ import { defaultRule } from '../constants/rules';
 
 import { Form, Input, DatePicker, Radio } from 'antd';
 import MaskedInput from 'antd-mask-input';
+import { TStep1Form } from '../types';
 
-const checkForWhitespaces = async (_: any, value: any) => {
+const checkForWhitespace = async (_: Rule, value: string) => {
   const rWhitespace = /[\S]\s{1,}[\S]/;
   const isWhitespaceBetweenWords = rWhitespace.test(value);
 
   if (isWhitespaceBetweenWords) {
-    return Promise.reject(new Error(ERROR_MESSAGES.WHITESPACES_IN_TEXT));
+    return Promise.reject(new Error(ERROR_MESSAGES.WHITESPACE_IN_TEXT));
   }
   return true;
 };
 
-const Step1Form = ({ form, formData }: any) => {
+const Step1Form = ({ form, formData }: TStep1Form & TPropsFromRedux) => {
   return (
     <Form
       form={form}
@@ -61,7 +62,7 @@ const Step1Form = ({ form, formData }: any) => {
         rules={[
           defaultRule,
           {
-            validator: checkForWhitespaces,
+            validator: checkForWhitespace,
           },
         ]}
       >
@@ -71,7 +72,7 @@ const Step1Form = ({ form, formData }: any) => {
       <Form.Item
         name={inpName}
         label={LABELS.NAME}
-        rules={[defaultRule, { validator: checkForWhitespaces }]}
+        rules={[defaultRule, { validator: checkForWhitespace }]}
       >
         <Input />
       </Form.Item>
@@ -79,7 +80,7 @@ const Step1Form = ({ form, formData }: any) => {
       <Form.Item
         name={inpPatronymic}
         label={LABELS.PATRONYMIC}
-        rules={[defaultRule, { validator: checkForWhitespaces }]}
+        rules={[defaultRule, { validator: checkForWhitespace }]}
       >
         <Input />
       </Form.Item>
@@ -92,7 +93,7 @@ const Step1Form = ({ form, formData }: any) => {
           {
             type: 'object' as const,
             required: true,
-            message: TXT_ERR_BIRTHDAY_NOT_CHOOSEN,
+            message: TXT_ERR_BIRTHDAY_NOT_CHOOSE,
           },
         ]}
       >
@@ -140,8 +141,4 @@ const Step1Form = ({ form, formData }: any) => {
   );
 };
 
-const mapStateToProps = (state: RootState) => ({
-  formData: getFormDataSelector(state),
-});
-
-export default connect(mapStateToProps)(Step1Form);
+export default connector(Step1Form);

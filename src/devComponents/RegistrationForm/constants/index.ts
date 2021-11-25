@@ -1,7 +1,7 @@
 export const TIMEOUT_600 = 600;
 export const REG_FORM_BASE_PATH = '/components/RegistrationForm';
 export const STEP_PATH = 'Step';
-export const TXT_ERR_BIRTHDAY_NOT_CHOOSEN = 'Не указана дата рождения';
+export const TXT_ERR_BIRTHDAY_NOT_CHOOSE = 'Не указана дата рождения';
 export const TXT_ERR_PASSPORT_SERIES = 'Введите серию паспорта';
 export const TXT_ERR_PASSPORT_NUMBER = 'Введите номер паспорта';
 
@@ -37,11 +37,17 @@ export enum GENDER {
   FEMALE = 'женский',
 }
 
-export enum ERROR_MESSAGES {
-  WHITESPACES_IN_TEXT = 'Значение не должно содержать пробелов между словами',
-  NOT_ALL_FIELDS_FIELDS = 'Возможно, не все поля заполнены',
-  PIN_HAS_3_DIGITS = 'пин-код состоит из 3х цифр',
-}
+// export enum ERROR_MESSAGES {
+//   WHITESPACE_IN_TEXT = 'Значение не должно содержать пробелов между словами',
+//   NOT_ALL_FIELDS_FIELDS = 'Возможно, не все поля заполнены',
+//   PIN_HAS_3_DIGITS = 'пин-код состоит из 3х цифр',
+// }
+
+export const ERROR_MESSAGES = {
+  WHITESPACE_IN_TEXT: 'Значение не должно содержать пробелов между словами',
+  NOT_ALL_FIELDS_FIELDS: 'Возможно, не все поля заполнены',
+  PIN_HAS_3_DIGITS: 'пин-код состоит из 3х цифр',
+};
 
 export enum FORMATS {
   DATE = 'DD.MM.YYYY',

@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
-import { connect } from 'react-redux';
+import { connector, TPropsFromRedux } from './connector';
 import { Redirect, useHistory, Route, Switch } from 'react-router-dom';
-
-import { saveFormData } from '../../../actions/actionCreators/myTable';
 
 import { Steps } from '@consta/uikit/Steps';
 import { Button } from '@consta/uikit/Button';
 import { Form } from 'antd';
+import Separator from '../../../components/Separator';
 
 import { useChangeStep } from '../CustomHooks';
 
@@ -17,26 +16,33 @@ import Step3Form from '../Step3Form';
 
 import styles from './CSteps.module.css';
 
-import { TCSteps } from '../types';
+import {
+  TCStepsOwnProps,
+  TStep,
+  TFormStep1,
+  TFormStep2,
+  TFormStep3,
+} from '../types';
 
 import { REG_FORM_BASE_PATH, STEP_PATH, LABELS } from '../constants';
 
 let initialLoad = true;
 
-const aStepForms = [Step1Form, Step2Form, Step3Form];
-
-const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
+const CSteps = ({
+  aSteps = fixtures_steps,
+  saveFormData,
+}: TCStepsOwnProps & TPropsFromRedux) => {
   const history = useHistory();
 
-  const [formStep1] = Form.useForm();
-  const [formStep2] = Form.useForm();
-  const [formStep3] = Form.useForm();
+  const [formStep1] = Form.useForm<TFormStep1>();
+  const [formStep2] = Form.useForm<TFormStep2>();
+  const [formStep3] = Form.useForm<TFormStep3>();
 
   const aForms = useMemo(() => {
     return [formStep1, formStep2, formStep3];
   }, [formStep1, formStep2, formStep3]);
 
-  const [activeStep, setChangeStep] = useChangeStep(
+  const [activeStep, setChangeStep] = useChangeStep<TStep>(
     aSteps[0],
     aSteps,
     aForms,
@@ -44,19 +50,9 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
   );
 
   const activeStepIndex = useMemo(() => {
+    console.log(aSteps);
     return aSteps.findIndex((item) => item === activeStep);
   }, [activeStep, aSteps]);
-
-  const renderRoutes = useMemo(() => {
-    return aStepForms.map((_, index) => {
-      const StepForm = aStepForms[index];
-      return (
-        <Route exact path={`${REG_FORM_BASE_PATH}/${STEP_PATH}${index + 1}`}>
-          <StepForm form={aForms[index]} />
-        </Route>
-      );
-    });
-  }, [aForms]);
 
   if (initialLoad) {
     initialLoad = false;
@@ -70,7 +66,7 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
       <Steps
         items={aSteps}
         value={activeStep}
-        getLabel={(item: any) => item.label}
+        getLabel={(item: TStep) => item.label}
         getDisabled={(item) =>
           aSteps.indexOf(item) > activeStepIndex + 1 ? true : false
         }
@@ -84,7 +80,16 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
       />
       <div className={styles.data_container}>
         <Switch>
-          {renderRoutes}
+          <Route exact path={`${REG_FORM_BASE_PATH}/${STEP_PATH}1`}>
+            <Step1Form form={formStep1} />
+          </Route>
+          <Route exact path={`${REG_FORM_BASE_PATH}/${STEP_PATH}2`}>
+            <Step2Form form={formStep2} />
+          </Route>
+          <Route exact path={`${REG_FORM_BASE_PATH}/${STEP_PATH}3`}>
+            <Step3Form form={formStep3} />
+          </Route>
+
           <Redirect
             from={REG_FORM_BASE_PATH}
             to={`${REG_FORM_BASE_PATH}/${STEP_PATH}1`}
@@ -102,7 +107,7 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
             }
           }}
         />
-        <span className={styles.separator} />
+        <Separator />
         <Button
           label={LABELS.FORWARD}
           size="s"
@@ -118,8 +123,4 @@ const CSteps = ({ aSteps = fixtures_steps, saveFormData }: TCSteps) => {
   );
 };
 
-const mapDispatchToProps = {
-  saveFormData,
-};
-
-export default connect(null, mapDispatchToProps)(CSteps);
+export default connector(CSteps);
