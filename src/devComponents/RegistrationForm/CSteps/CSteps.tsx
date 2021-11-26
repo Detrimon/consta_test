@@ -50,7 +50,6 @@ const CSteps = ({
   );
 
   const activeStepIndex = useMemo(() => {
-    console.log(aSteps);
     return aSteps.findIndex((item) => item === activeStep);
   }, [activeStep, aSteps]);
 
@@ -100,6 +99,7 @@ const CSteps = ({
         <Button
           label={LABELS.BACK}
           size="s"
+          disabled={activeStepIndex === 0}
           onClick={() => {
             const newStepIndex = aSteps.indexOf(activeStep) - 1;
             if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
@@ -108,16 +108,30 @@ const CSteps = ({
           }}
         />
         <Separator />
-        <Button
-          label={LABELS.FORWARD}
-          size="s"
-          onClick={() => {
-            const newStepIndex = aSteps.indexOf(activeStep) + 1;
-            if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
-              setChangeStep(newStepIndex);
-            }
-          }}
-        />
+        {activeStepIndex < aSteps.length - 1 ? (
+          <Button
+            label={LABELS.FORWARD}
+            size="s"
+            disabled={activeStepIndex === aSteps.length - 1}
+            onClick={() => {
+              const newStepIndex = aSteps.indexOf(activeStep) + 1;
+              if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
+                setChangeStep(newStepIndex);
+              }
+            }}
+          />
+        ) : (
+          <Button
+            label={LABELS.SUBMIT}
+            size="s"
+            onClick={() => {
+              const newStepIndex = aSteps.indexOf(activeStep) + 1;
+              if (newStepIndex >= 0 && newStepIndex < aSteps.length) {
+                setChangeStep(newStepIndex);
+              }
+            }}
+          />
+        )}
       </div>
     </>
   );

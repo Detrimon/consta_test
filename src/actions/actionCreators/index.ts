@@ -5,7 +5,10 @@ export {
   removeTableRow,
   removeTableRowOnClient,
   addTableRowOnClient,
+} from './myTable';
+
+export {
   suggestDaDataAddress,
   updateAddressSuggest,
   saveFormData,
-} from './myTable';
+} from './registrationForm';

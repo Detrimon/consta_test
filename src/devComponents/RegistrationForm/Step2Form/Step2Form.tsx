@@ -27,7 +27,6 @@ const Step2Form = ({
   suggestDaDataAddress,
   saveFormData,
 }: TStep2Form & TPropsFromRedux) => {
-  debugger;
   const suggestedValue = useMemo(() => {
     return aSuggestedAddress.map((address) => ({
       label: address.value,

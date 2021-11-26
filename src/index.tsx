@@ -10,13 +10,13 @@ import KeycloakProvider from './layouts/keycloakProvider/KeycloakProvider';
 
 ReactDOM.render(
   <CheckConfigurationLayout>
-    {/* <KeycloakProvider> */}
-    <Provider store={store}>
-      <Router history={history}>
-        <App />
-      </Router>
-    </Provider>
-    {/* </KeycloakProvider> */}
+    <KeycloakProvider>
+      <Provider store={store}>
+        <Router history={history}>
+          <App />
+        </Router>
+      </Provider>
+    </KeycloakProvider>
   </CheckConfigurationLayout>,
   document.getElementById('root')
 );

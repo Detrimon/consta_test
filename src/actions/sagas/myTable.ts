@@ -1,34 +1,17 @@
-import { takeLatest, put, call, takeEvery } from 'redux-saga/effects';
+import { put, call } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
 import { TFormData } from '../../components/MyTable/AddDataForm/AddDataForm';
 import { IUser, TItem } from '../../http/services/myTable/MyTableService';
-import { ISuggestions } from '../../http/services/DaData/DaDataService';
 import myTableService from '../../http/services/myTable/MyTableService';
-import daDataService from '../../http/services/DaData/DaDataService';
 import { store } from '../../redux/store';
 import {
   getMyTableDataFailure,
   getMyTableDataSuccess,
+  removeTableRow as removeTableRowAction,
   removeTableRowOnClient,
   addTableRowOnClient,
-  updateAddressSuggest,
 } from '../actionCreators';
-import {
-  GET_MYTABLE_DATA,
-  REQUEST,
-  REMOVE_TABLE_ROW,
-  ADD_TABLE_ITEM,
-  SUGGEST_DADATA_ADDRESS,
-} from '../../constants/redux';
 import { getTableData } from '../../redux/selector';
-import { suggestDaDataAddress as suggestDaDataAddress_ActionCreator } from '../actionCreators';
-
-export function* myTableSaga() {
-  yield takeLatest(GET_MYTABLE_DATA + REQUEST, getMyTableData);
-  yield takeLatest(REMOVE_TABLE_ROW, removeTableRow);
-  yield takeEvery(ADD_TABLE_ITEM, addTableItem);
-  yield takeEvery(SUGGEST_DADATA_ADDRESS, suggestDaDataAddress);
-}
 
 export function* getMyTableData() {
   try {
@@ -41,14 +24,18 @@ export function* getMyTableData() {
   }
 }
 
-export function* removeTableRow(action: any) {
-  const { event, rows } = action;
+export function* removeTableRow(
+  action: ReturnType<typeof removeTableRowAction>
+) {
+  const { e, rows } = action.payload;
 
-  const rowId = parseInt(event.target.dataset.id, 10);
+  // @ts-ignore
+  const rowId: string = e.target?.dataset?.id;
+  debugger;
 
   try {
     const newRows = rows.filter((item: any) => {
-      if (!(event.target instanceof HTMLButtonElement)) {
+      if (!(e.target instanceof HTMLButtonElement)) {
         return false;
       }
       return item.id !== rowId;
@@ -58,8 +45,10 @@ export function* removeTableRow(action: any) {
       myTableService.removeItem,
       rowId
     );
+    debugger;
     if (result.status === 200 && result.statusText === 'OK') {
       yield put(removeTableRowOnClient(newRows));
+      return;
     }
     throw new Error('Доставлены некорректные данные..');
   } catch (err) {
@@ -84,7 +73,7 @@ export function* addTableItem(action: any) {
       item
     );
     if (result.status === 200 && result.statusText === 'OK') {
-      const resultItem = {
+      const item = {
         id: result.data.id,
         surname: result.data.surname,
         name: result.data.name,
@@ -94,33 +83,12 @@ export function* addTableItem(action: any) {
       form.resetFields();
       toCloseModal();
       const currentRows = getTableData(store.getState());
-      yield put(addTableRowOnClient(currentRows, resultItem));
+      yield put(addTableRowOnClient({ currentRows, item }));
     } else {
       throw new Error('Доставлены некорректные данные...');
     }
   } catch (e) {
     console.log('Случилась какая-то ошибка.. ');
     console.dir(e);
-  }
-}
-
-export function* suggestDaDataAddress(
-  action: ReturnType<typeof suggestDaDataAddress_ActionCreator>
-) {
-  const { payload } = action;
-
-  try {
-    const response: AxiosResponse<ISuggestions, any> = yield call(
-      daDataService.suggestAddress,
-      payload
-    );
-    if (response.status === 200) {
-      const aSuggestions = response.data.suggestions;
-      yield put(updateAddressSuggest(aSuggestions));
-      return;
-    }
-    throw new Error('response.status не равен 200.. ');
-  } catch (error) {
-    console.log('Ууупс, какая-то ошибка.');
   }
 }

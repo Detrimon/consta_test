@@ -22,6 +22,7 @@ export enum LABELS {
   CREDIT_CARD_PIN = 'Пин:',
   FORWARD = 'Вперед',
   BACK = 'Назад',
+  SUBMIT = 'Зарегистрироваться',
 }
 
 export enum PLACEHOLDERS {

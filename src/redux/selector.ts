@@ -4,6 +4,7 @@ import { createSelector } from 'reselect';
 import { RootState } from './store';
 import { TPage } from '../navComponents/MyBreadcrumbs';
 import { TRegFormState } from './reducers/registrationForm';
+import { TRow } from '../components/MyTable/MyTable';
 
 export type TBaseRow = TableRow & {
   id: string;
@@ -43,14 +44,13 @@ export const getFormDataSelector = createSelector(
 
 export const getTableRows = createSelector([getTableData], (tableData) => {
   return tableData.map(
-    ({ id, surname, name, patronymic, age }) =>
-      ({
-        id: '' + id,
-        surname,
-        name,
-        patronymic,
-        age,
-      } as TBaseRow)
+    ({ id, surname, name, patronymic, age }): TRow => ({
+      id: '' + id,
+      surname,
+      name,
+      patronymic,
+      age,
+    })
   );
 });
 

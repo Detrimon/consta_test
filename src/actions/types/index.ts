@@ -1,5 +1,4 @@
 import { UFormSteps } from '../../devComponents/RegistrationForm/types/';
-import { IUser } from '../../http/services/myTable/MyTableService';
 import {
   REMOVE_TABLE_ROW,
   REMOVE_TABLE_ROW_ON_CLIENT,
