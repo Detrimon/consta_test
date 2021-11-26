@@ -6,3 +6,9 @@ export {
   removeTableRowOnClient,
   addTableRowOnClient,
 } from './myTable';
+
+export {
+  suggestDaDataAddress,
+  updateAddressSuggest,
+  saveFormData,
+} from './registrationForm';

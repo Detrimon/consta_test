@@ -22,7 +22,7 @@ class myTableService {
     return http.get<IUser[]>('/consta-my-tables');
   }
 
-  removeItem(id: number) {
+  removeItem(id: string) {
     return http.delete<IUser>(`/consta-my-tables/${id}`);
   }
 

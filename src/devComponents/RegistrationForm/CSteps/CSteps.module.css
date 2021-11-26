@@ -1,0 +1,13 @@
+.data_container {
+  margin: 20px 10px;
+}
+
+.action_container {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.separator {
+  display: 'inline-block';
+  width: '5px';
+}

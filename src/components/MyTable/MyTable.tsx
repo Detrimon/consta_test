@@ -1,21 +1,11 @@
-import {
-  Table,
-  TableColumn,
-  TableControl,
-  TableFilters,
-} from '@consta/uikit/Table';
+import { Table, TableColumn, TableFilters } from '@consta/uikit/Table';
 import AddDataForm from './AddDataForm';
 import { tableData } from './fixtures';
 import { Button } from '@consta/uikit/Button';
 import { useState, useEffect, useMemo } from 'react';
 // @ts-ignore
 import { useKeycloak } from '@react-keycloak/web';
-import { connect } from 'react-redux';
-import { RootState } from '../../redux/store';
-import {
-  getMyTableDataRequest,
-  removeTableRow,
-} from '../../actions/actionCreators';
+import { connector, TPropsFromRedux } from './connector';
 
 import { TBaseRow } from '../../redux/selector';
 import { Modal } from '@consta/uikit/Modal';
@@ -23,21 +13,14 @@ import { IconArrowLeft } from '@consta/uikit/IconArrowLeft';
 
 import styles from './MyTable.module.css';
 import Loader from '../Loader';
-import { getTableRows } from '../../redux/selector';
 
 export interface TRow extends TBaseRow {
   actions?: string;
 }
 
-type TMyTable = {
-  rows: TRow[];
-  getTableData: any;
-  removeItem: any;
-};
-
 const filters = tableData.filters as TableFilters<TRow>;
 
-const MyTable = ({ rows, getTableData, removeItem }: TMyTable) => {
+const MyTable = ({ rows, getTableData, removeItem }: TPropsFromRedux) => {
   const { keycloak, initialized } = useKeycloak();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hideColumns, setHideColumns] = useState<{ [key: string]: boolean }>({
@@ -56,7 +39,7 @@ const MyTable = ({ rows, getTableData, removeItem }: TMyTable) => {
       return hideColumns.hasOwnProperty(column.accessor)
         ? {
             ...column,
-            control: ({ column }: TableControl<TBaseRow>) => {
+            control: ({ column }) => {
               return (
                 <Button
                   size="xs"
@@ -131,14 +114,5 @@ const MyTable = ({ rows, getTableData, removeItem }: TMyTable) => {
     <Loader />
   );
 };
-const mapStateToProps = (state: RootState) => ({
-  rows: getTableRows(state),
-});
 
-const mapDispatchToProps = {
-  getTableData: () => getMyTableDataRequest(),
-  removeItem: (rows: TBaseRow[], e: React.SyntheticEvent<EventTarget, Event>) =>
-    removeTableRow(rows, e),
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyTable);
+export default connector(MyTable);

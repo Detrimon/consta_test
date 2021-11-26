@@ -37,6 +37,7 @@ const MyBreadcrumbs = () => {
       size="xs"
       pages={aPages}
       onlyIconRoot
+      maxCount={1}
       getLabel={(item) => item.label}
       getLink={(item) => item.link}
       getIcon={(item) => item.icon}
@@ -70,8 +71,8 @@ function makeBreadcrumbsPages(
   const aPages: TPage[] = aPathsForSearch.map((item, index) => {
     const crumb: TNavMap = indexedNavMap[item];
     const page: TPage = {
-      label: crumb.label,
-      link: crumb.path,
+      label: crumb?.label,
+      link: crumb?.path,
       isActive: index === aPathsForSearchLength - 1 || false,
     };
     return page;

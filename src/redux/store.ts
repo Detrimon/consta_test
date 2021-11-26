@@ -1,7 +1,7 @@
 import rootReducer from './reducers';
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import { myTableSaga } from '../actions/sagas/myTable';
+import { sagas } from '../actions/sagas';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -14,7 +14,7 @@ export const store = configureStore({
     }).concat(sagaMiddleware),
 });
 
-sagaMiddleware.run(myTableSaga);
+sagaMiddleware.run(sagas);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type GetState = typeof store.getState;

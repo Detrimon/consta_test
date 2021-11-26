@@ -1,4 +1,4 @@
-import { takeLatest, put, call, takeEvery } from 'redux-saga/effects';
+import { put, call } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
 import { TFormData } from '../../components/MyTable/AddDataForm/AddDataForm';
 import { IUser, TItem } from '../../http/services/myTable/MyTableService';
@@ -7,22 +7,11 @@ import { store } from '../../redux/store';
 import {
   getMyTableDataFailure,
   getMyTableDataSuccess,
+  removeTableRow as removeTableRowAction,
   removeTableRowOnClient,
   addTableRowOnClient,
 } from '../actionCreators';
-import {
-  GET_MYTABLE_DATA,
-  REQUEST,
-  REMOVE_TABLE_ROW,
-  ADD_TABLE_ITEM,
-} from '../../constants/redux';
 import { getTableData } from '../../redux/selector';
-
-export function* myTableSaga() {
-  yield takeLatest(GET_MYTABLE_DATA + REQUEST, getMyTableData);
-  yield takeLatest(REMOVE_TABLE_ROW, removeTableRow);
-  yield takeEvery(ADD_TABLE_ITEM, addTableItem);
-}
 
 export function* getMyTableData() {
   try {
@@ -35,14 +24,18 @@ export function* getMyTableData() {
   }
 }
 
-export function* removeTableRow(action: any) {
-  const { event, rows } = action;
+export function* removeTableRow(
+  action: ReturnType<typeof removeTableRowAction>
+) {
+  const { e, rows } = action.payload;
 
-  const rowId = parseInt(event.target.dataset.id, 10);
+  // @ts-ignore
+  const rowId: string = e.target?.dataset?.id;
+  debugger;
 
   try {
     const newRows = rows.filter((item: any) => {
-      if (!(event.target instanceof HTMLButtonElement)) {
+      if (!(e.target instanceof HTMLButtonElement)) {
         return false;
       }
       return item.id !== rowId;
@@ -52,8 +45,10 @@ export function* removeTableRow(action: any) {
       myTableService.removeItem,
       rowId
     );
+    debugger;
     if (result.status === 200 && result.statusText === 'OK') {
       yield put(removeTableRowOnClient(newRows));
+      return;
     }
     throw new Error('Доставлены некорректные данные..');
   } catch (err) {
@@ -78,7 +73,7 @@ export function* addTableItem(action: any) {
       item
     );
     if (result.status === 200 && result.statusText === 'OK') {
-      const resultItem = {
+      const item = {
         id: result.data.id,
         surname: result.data.surname,
         name: result.data.name,
@@ -88,7 +83,7 @@ export function* addTableItem(action: any) {
       form.resetFields();
       toCloseModal();
       const currentRows = getTableData(store.getState());
-      yield put(addTableRowOnClient(currentRows, resultItem));
+      yield put(addTableRowOnClient({ currentRows, item }));
     } else {
       throw new Error('Доставлены некорректные данные...');
     }

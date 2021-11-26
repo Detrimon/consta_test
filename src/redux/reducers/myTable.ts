@@ -1,54 +1,35 @@
-import produce from 'immer';
 import { IUser } from '../../http/services/myTable/MyTableService';
+import { createReducer } from '@reduxjs/toolkit';
 import {
-  FAILURE,
-  GET_MYTABLE_DATA,
-  SUCCESS,
-  REMOVE_TABLE_ROW_ON_CLIENT,
-  ADD_TABLE_ROW_ON_CLIENT,
-} from '../../constants/redux';
+  addTableRowOnClient,
+  getMyTableDataFailure,
+  getMyTableDataSuccess,
+  removeTableRowOnClient,
+} from '../../actions/actionCreators';
 
 type TMyTableState = {
   data: IUser[] | [];
   error: any;
 };
 
-type TMyTableAction = {
-  type: string;
-  data: IUser[];
-  error: any;
-  rows: any;
-  item: IUser;
-};
-
-const initialState = {
+const initialState: TMyTableState = {
   data: [],
   error: null,
 };
 
-// export type IItem = {
-//   id:
-// }
-
-export const myTable = produce(
-  (draft: TMyTableState = initialState, action: TMyTableAction) => {
-    const { type, data, error, rows, item } = action;
-
-    switch (type) {
-      case GET_MYTABLE_DATA + SUCCESS:
-        draft.data = data;
-        break;
-      case GET_MYTABLE_DATA + FAILURE:
-        draft.error = error;
-        break;
-      case REMOVE_TABLE_ROW_ON_CLIENT:
-        draft.data = rows;
-        break;
-      case ADD_TABLE_ROW_ON_CLIENT:
-        draft.data = [...rows, item];
-        break;
-      default:
-        return draft;
-    }
-  }
-);
+export const myTable = createReducer(initialState, (builder) => {
+  builder
+    .addCase(getMyTableDataSuccess, (state, action) => {
+      state.data = action.payload;
+    })
+    .addCase(getMyTableDataFailure, (state, action) => {
+      state.error = action.payload;
+    })
+    .addCase(removeTableRowOnClient, (state, action) => {
+      debugger;
+      state.data = action.payload;
+    })
+    .addCase(addTableRowOnClient, (state, action) => {
+      state.data = [...action.payload.currentRows, action.payload.item];
+    });
+});

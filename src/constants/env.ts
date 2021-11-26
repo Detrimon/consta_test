@@ -5,6 +5,8 @@ const {
   REACT_APP_KEYCLOAK_ONLOAD_ACTION,
   REACT_APP_KEYCLOAK_SILENT_CHECK_SSO_REDIRECT_URI,
   REACT_APP_BASE_DATA_API_URL,
+  REACT_APP_DADATA_API_URL,
+  REACT_APP_DADATA_API_KEY,
 } = process.env;
 
 export const isEnvConfigIncomplete = [
@@ -13,6 +15,8 @@ export const isEnvConfigIncomplete = [
   REACT_APP_KEYCLOAK_CLIENT_ID,
   REACT_APP_KEYCLOAK_ONLOAD_ACTION,
   REACT_APP_BASE_DATA_API_URL,
+  REACT_APP_DADATA_API_URL,
+  REACT_APP_DADATA_API_KEY,
   REACT_APP_KEYCLOAK_ONLOAD_ACTION === 'check-sso'
     ? REACT_APP_KEYCLOAK_SILENT_CHECK_SSO_REDIRECT_URI
     : 'dummy',
@@ -29,3 +33,5 @@ export const keycloakConfig = {
 };
 
 export const baseDataAPIUrl = REACT_APP_BASE_DATA_API_URL;
+export const dadata_api_url = REACT_APP_DADATA_API_URL;
+export const dadata_api_key = REACT_APP_DADATA_API_KEY;
