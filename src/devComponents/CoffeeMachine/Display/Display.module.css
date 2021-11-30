@@ -1,0 +1,48 @@
+.item_display {
+  grid-column-start: 1;
+  grid-column-end: 3;
+
+  padding: 20px 10px;
+
+  width: 100%;
+  height: 100%;
+}
+
+.display_container {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  width: 100%;
+  height: 50%;
+
+  padding: 4px 7px;
+
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 0.9em;
+  color: transparent;
+  transition: all 0.5s ease-in;
+}
+
+.display_container_active {
+  border-color: #40a9ff;
+  transition: all 0.5s ease-in;
+  color: #40a9ff;
+}
+
+.display_loader {
+  position: absolute;
+  display: flex;
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.display_loader_active {
+  opacity: 1;
+}

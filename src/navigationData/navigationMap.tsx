@@ -13,6 +13,7 @@ import MySteps from '../navComponents/MySteps';
 import MyDialog from '../components/MyDialog';
 import MyModal from '../components/MyModal';
 import RegistrationForm from '../devComponents/RegistrationForm';
+import CoffeeMachine from '../devComponents/CoffeeMachine';
 
 import { IconLaptop } from '@consta/uikit/IconLaptop';
 import { IconBento } from '@consta/uikit/IconBento';
@@ -118,6 +119,12 @@ const oNavMap = [
     path: '/components/RegistrationForm',
     label: 'RegistrationForm',
     component: RegistrationForm,
+  },
+  {
+    category: 'component',
+    path: '/components/CoffeeMachine',
+    label: 'CoffeeMachine',
+    component: CoffeeMachine,
   },
 ] as TNavMap[];
 

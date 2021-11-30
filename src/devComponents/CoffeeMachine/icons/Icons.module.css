@@ -1,0 +1,36 @@
+.container {
+  position: relative;
+}
+
+.secondIcon {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+}
+
+.default {
+  stroke: black;
+  stroke-width: 2px;
+  fill: #bec9d3;
+  transition: fill 0.5s linear;
+}
+
+.enabled {
+  fill: #f3ab1d;
+  transition: fill 0.5s linear;
+}
+
+.sizeM {
+  width: 35px;
+  height: 35px;
+}
+
+.sizeS {
+  width: 25px;
+  height: 25px;
+}
+
+.sizeXS {
+  width: 20px;
+  height: 20px;
+}

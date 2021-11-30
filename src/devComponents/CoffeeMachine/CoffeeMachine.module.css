@@ -1,0 +1,62 @@
+.gridContainer {
+  height: 100%;
+  display: grid;
+  justify-items: center; /* выравнивание элементов по горизонтали */
+  align-items: center; /* выравнивание элементов по вертикали */
+  justify-content: space-between;
+  align-content: space-between;
+
+  grid-auto-flow: row;
+
+  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-rows: 1fr 1fr 6fr;
+}
+
+.front__border {
+  margin: 15px;
+  padding: 5px;
+  height: calc(100% - 30px);
+  border: 1px solid;
+  border-color: #4d5a5e;
+  border-radius: 15px;
+  transition: border 0.5s linear;
+}
+
+.front__boder_active {
+  border-color: rgb(77, 180, 214);
+  transition: border 0.5s linear;
+}
+
+.item_waterTank {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 4;
+
+  padding: 20%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.waterIndicator_container {
+  width: 100%;
+  border: 1px solid #4d5a5e;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 100%;
+
+  display: flex;
+  align-items: flex-end;
+  transition: border-color 0.5s ease-in;
+}
+
+.waterIndicator_container_active {
+  border-color: #40a9ff;
+  transition: border-color 0.5s ease-in;
+}
+
+.waterIndicator_indicator {
+  background-color: #40a9ff;
+  width: 100%;
+}

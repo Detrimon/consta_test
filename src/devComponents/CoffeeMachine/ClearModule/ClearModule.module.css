@@ -1,0 +1,28 @@
+.item_clearIndicator {
+  width: 100%;
+  padding: 0 10px;
+}
+
+.item_clearIndicator_container {
+  width: 100%;
+  border: 1px solid #4d5a5e;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 10px;
+
+  display: flex;
+  justify-content: left;
+  transition: border-color 0.5s ease-in;
+}
+
+.item_clearIndicator_indicator {
+  opacity: 0;
+  width: 40%;
+  height: 100%;
+  transition: all 0.5s ease-in;
+}
+
+.item_clearIndicator_indicator_active {
+  opacity: 1;
+  transition: all 0.5s ease-in;
+}
