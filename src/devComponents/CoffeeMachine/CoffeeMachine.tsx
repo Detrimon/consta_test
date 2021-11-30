@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import cn from 'classnames';
 import styles from './CoffeeMachine.module.css';
 import Button from './Button';
@@ -6,21 +6,16 @@ import Button from './Button';
 import Display from './Display';
 import ClearModule from './ClearModule';
 import MakeCoffeeModule from './MakeCoffeeModule';
+import WaterModule from './WaterModule';
 
 import { timeLag, typeDisplayValue } from './commonLib/commonLib';
 
 import { CoffeeMachineContextProvider } from './context/context';
 import { READY } from './constants/enums';
 
-import {
-  MAX_WATER_AMOUNT,
-  AMOUNT_WATER_PER_TIME,
-  MIN_AMOUNT_OF_WATER_FOR_ONE_CUP,
-} from './constants/constants';
+import { MIN_AMOUNT_OF_WATER_FOR_ONE_CUP } from './constants/constants';
 
 import {
-  MSG_ENOUGH_WATER,
-  MSG_FILL_WATER_IN_PROCESS,
   MSG_LOW_WATER,
   MSG_MACHINE_NOT_PREPARED,
   MSG_MACHINE_PREPARATION,
@@ -28,8 +23,6 @@ import {
 } from './constants/messages';
 
 import { skin } from './hoc/Skin';
-
-let timer: NodeJS.Timer;
 
 const CoffeeMachine = () => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -51,43 +44,6 @@ const CoffeeMachine = () => {
     setNumberOfCupsOfCoffeePrepared,
     setDisplayValue,
   };
-
-  const waterAmountInPercent = useMemo(
-    () => (waterAmountMl * 100) / MAX_WATER_AMOUNT,
-    [waterAmountMl]
-  );
-
-  const stopFillingWaterTank = useCallback(() => {
-    clearInterval(timer);
-    setIsActionInProcess(false);
-  }, []);
-
-  const startFillingWaterTank = useCallback(() => {
-    if (isActionInProcess) {
-      return;
-    }
-    setIsActionInProcess(true);
-    let currentValue = waterAmountMl;
-
-    if (currentValue >= MAX_WATER_AMOUNT) {
-      typeDisplayValue(MSG_ENOUGH_WATER, setDisplayValue);
-      return;
-    }
-
-    typeDisplayValue(MSG_FILL_WATER_IN_PROCESS, setDisplayValue);
-
-    timer = setInterval(() => {
-      if (currentValue >= MAX_WATER_AMOUNT) {
-        return stopFillingWaterTank();
-      }
-
-      if (currentValue + AMOUNT_WATER_PER_TIME >= MAX_WATER_AMOUNT) {
-        currentValue = MAX_WATER_AMOUNT - AMOUNT_WATER_PER_TIME;
-      }
-      currentValue += AMOUNT_WATER_PER_TIME;
-      setWaterAmountMl(currentValue);
-    }, 500);
-  }, [stopFillingWaterTank, isActionInProcess, waterAmountMl]);
 
   const switchMachine = useCallback(() => {
     if (isActionInProcess) {
@@ -137,41 +93,12 @@ const CoffeeMachine = () => {
       >
         <div className={styles.gridContainer}>
           <div className={styles.item_switch}>
-            <Button
-              icon="power"
-              active={isSwitchOn}
-              onClick={() => switchMachine()}
-            />
+            <Button icon="power" onClick={() => switchMachine()} />
           </div>
 
           <MakeCoffeeModule />
-
-          <div className={styles.item_btnWaterFill}>
-            <Button
-              icon="fillWater"
-              iconSize="xs"
-              active={isSwitchOn}
-              onMouseUp={isSwitchOn ? () => stopFillingWaterTank() : undefined}
-              onMouseDown={
-                isSwitchOn ? () => startFillingWaterTank() : undefined
-              }
-            />
-          </div>
-
+          <WaterModule />
           <ClearModule />
-
-          <div className={styles.item_waterTank}>
-            <div
-              className={cn(styles.waterIndicator_container, {
-                [styles.waterIndicator_container_active]: isSwitchOn,
-              })}
-            >
-              <div
-                className={styles.waterIndicator_indicator}
-                style={{ height: waterAmountInPercent + '%' }}
-              ></div>
-            </div>
-          </div>
           <Display />
         </div>
       </div>

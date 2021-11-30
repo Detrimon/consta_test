@@ -1,0 +1,33 @@
+.item_waterTank {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 4;
+
+  padding: 20%;
+
+  height: 100%;
+  width: 100%;
+}
+
+.waterIndicator_container {
+  width: 100%;
+  border: 1px solid #4d5a5e;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 100%;
+
+  display: flex;
+  align-items: flex-end;
+  transition: border-color 0.5s ease-in;
+}
+
+.waterIndicator_container_active {
+  border-color: #40a9ff;
+  transition: border-color 0.5s ease-in;
+}
+
+.waterIndicator_indicator {
+  background-color: #40a9ff;
+  width: 100%;
+}
