@@ -9,8 +9,13 @@ import {
 import { typeDisplayValue } from '../commonLib/commonLib';
 
 import Button from '../Button';
-// @ts-ignore
 import styles from './MakeCoffeeModule.module.css';
+import {
+  MSG_COFFEE_IS_READY,
+  MSG_MAKING_COFFEE_IN_PROCESS,
+  MSG_NOT_ENOUGH_WATER,
+  MSG_START_CLEAN,
+} from '../constants/messages';
 
 const MakeCoffeeModule = () => {
   const {
@@ -31,20 +36,14 @@ const MakeCoffeeModule = () => {
       }
 
       if (waterAmountMl < MIN_AMOUNT_OF_WATER_FOR_ONE_CUP * num) {
-        return typeDisplayValue(
-          'Недостаточно воды для приготовления кофе.',
-          setDisplayValue
-        );
+        return typeDisplayValue(MSG_NOT_ENOUGH_WATER, setDisplayValue);
       }
 
       if (numberOfCupsOfCoffeePrepared >= MAX_CUPS_BEFORE_CLEAN) {
-        return typeDisplayValue(
-          'Запустите очистку кофемашины перед тем, как готовить кофе.',
-          setDisplayValue
-        );
+        return typeDisplayValue(MSG_START_CLEAN, setDisplayValue);
       }
       setIsActionInProcess(true);
-      typeDisplayValue('Кофе готовится, подождите.', setDisplayValue)
+      typeDisplayValue(MSG_MAKING_COFFEE_IN_PROCESS, setDisplayValue)
         .then(() => {
           const waterPart = MIN_AMOUNT_OF_WATER_FOR_ONE_CUP / 10;
           let counter = 0;
@@ -63,11 +62,10 @@ const MakeCoffeeModule = () => {
         })
         .then(() => {
           setNumberOfCupsOfCoffeePrepared(numberOfCupsOfCoffeePrepared + num);
-          // setWaterAmountMl(waterAmountMl - MIN_AMOUNT_OF_WATER_FOR_ONE_CUP);
           return Promise.resolve();
         })
         .then(() => {
-          typeDisplayValue('Ваш кофе готов', setDisplayValue);
+          typeDisplayValue(MSG_COFFEE_IS_READY, setDisplayValue);
           setIsActionInProcess(false);
         });
     },

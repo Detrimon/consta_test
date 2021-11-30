@@ -22,7 +22,7 @@
   transition: border 0.5s linear;
 }
 
-.front__boder_active {
+.front__border_active {
   border-color: rgb(77, 180, 214);
   transition: border 0.5s linear;
 }

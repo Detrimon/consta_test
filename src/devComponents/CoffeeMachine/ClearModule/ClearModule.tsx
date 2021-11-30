@@ -10,6 +10,10 @@ import { timeLag, typeDisplayValue } from '../commonLib/commonLib';
 import styles from './ClearModule.module.css';
 import Button from '../Button';
 import cn from 'classnames';
+import {
+  MSG_CLEAN_IN_PROCESS,
+  MSG_CLEAN_IS_COMPLETE,
+} from '../constants/messages';
 
 const aThresholds = Object.keys(CLEAN_THRESHOLDS_IN_PERCENT) as [
   keyof typeof CLEAN_THRESHOLDS_IN_PERCENT
@@ -44,15 +48,11 @@ const ClearModule = () => {
       return;
     }
     setIsActionInProcess(true);
-    typeDisplayValue(
-      'Очистка кофемашины запущена, подождите.',
-      setDisplayValue,
-      ''
-    )
+    typeDisplayValue(MSG_CLEAN_IN_PROCESS, setDisplayValue, '')
       .then(() => timeLag(10000))
       .then(() => Promise.resolve(setNumberOfCupsOfCoffeePrepared(0)))
       .then(() => {
-        typeDisplayValue('Очистка завершена!', setDisplayValue);
+        typeDisplayValue(MSG_CLEAN_IS_COMPLETE, setDisplayValue);
         setIsActionInProcess(false);
       });
   }, [

@@ -26,7 +26,6 @@ export const myTable = createReducer(initialState, (builder) => {
       state.error = action.payload;
     })
     .addCase(removeTableRowOnClient, (state, action) => {
-      debugger;
       state.data = action.payload;
     })
     .addCase(addTableRowOnClient, (state, action) => {

@@ -31,7 +31,6 @@ export function* removeTableRow(
 
   // @ts-ignore
   const rowId: string = e.target?.dataset?.id;
-  debugger;
 
   try {
     const newRows = rows.filter((item: any) => {
@@ -45,7 +44,6 @@ export function* removeTableRow(
       myTableService.removeItem,
       rowId
     );
-    debugger;
     if (result.status === 200 && result.statusText === 'OK') {
       yield put(removeTableRowOnClient(newRows));
       return;

@@ -10,12 +10,22 @@ import MakeCoffeeModule from './MakeCoffeeModule';
 import { timeLag, typeDisplayValue } from './commonLib/commonLib';
 
 import { CoffeeMachineContextProvider } from './context/context';
+import { READY } from './constants/enums';
 
 import {
   MAX_WATER_AMOUNT,
   AMOUNT_WATER_PER_TIME,
   MIN_AMOUNT_OF_WATER_FOR_ONE_CUP,
 } from './constants/constants';
+
+import {
+  MSG_ENOUGH_WATER,
+  MSG_FILL_WATER_IN_PROCESS,
+  MSG_LOW_WATER,
+  MSG_MACHINE_NOT_PREPARED,
+  MSG_MACHINE_PREPARATION,
+  MSG_MACHINE_PREPARED,
+} from './constants/messages';
 
 import { skin } from './hoc/Skin';
 
@@ -60,14 +70,11 @@ const CoffeeMachine = () => {
     let currentValue = waterAmountMl;
 
     if (currentValue >= MAX_WATER_AMOUNT) {
-      typeDisplayValue(
-        'Воды достаточно. Можете сделать вкусный кофе!',
-        setDisplayValue
-      );
+      typeDisplayValue(MSG_ENOUGH_WATER, setDisplayValue);
       return;
     }
 
-    typeDisplayValue('Контейнер наполняется водой.', setDisplayValue);
+    typeDisplayValue(MSG_FILL_WATER_IN_PROCESS, setDisplayValue);
 
     timer = setInterval(() => {
       if (currentValue >= MAX_WATER_AMOUNT) {
@@ -95,26 +102,23 @@ const CoffeeMachine = () => {
 
     setIsActionInProcess(true);
     if (isSwitchOn) return;
-    typeDisplayValue(`Подготовка машины к работе...`, setDisplayValue)
+    typeDisplayValue(MSG_MACHINE_PREPARATION, setDisplayValue)
       .then(() => timeLag(2000))
       .then(() => {
         return waterAmountMl < MIN_AMOUNT_OF_WATER_FOR_ONE_CUP
           ? Promise.resolve({
-              status: 'not ready',
-              message: `Мало воды. Налейте воды в резервуар`,
+              status: READY.FALSE,
+              message: MSG_LOW_WATER,
             })
-          : Promise.resolve({ status: 'ready' });
+          : Promise.resolve({ status: READY.TRUE });
       })
       .then((result: any) => {
-        if (result.status === 'ready') {
-          return typeDisplayValue(
-            `Кофемашина готова к работе. Приготовьте вкусный кофе!`,
-            setDisplayValue
-          );
+        if (result.status === READY.TRUE) {
+          return typeDisplayValue(MSG_MACHINE_PREPARED, setDisplayValue);
         }
-        if (result.status === 'not ready') {
+        if (result.status === READY.FALSE) {
           return typeDisplayValue(
-            `Кофемашина не готова к работе. ${result.message}`,
+            `${MSG_MACHINE_NOT_PREPARED} ${result.message}`,
             setDisplayValue
           );
         }
@@ -128,7 +132,7 @@ const CoffeeMachine = () => {
     <CoffeeMachineContextProvider value={coffeeMachineInitialContext}>
       <div
         className={cn(styles.front__border, {
-          [styles.front__boder_active]: isSwitchOn,
+          [styles.front__border_active]: isSwitchOn,
         })}
       >
         <div className={styles.gridContainer}>
@@ -168,7 +172,6 @@ const CoffeeMachine = () => {
               ></div>
             </div>
           </div>
-
           <Display />
         </div>
       </div>

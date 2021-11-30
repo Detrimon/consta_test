@@ -1,7 +1,6 @@
 import { Spin } from 'antd';
 import { CoffeeMachineContextConsumer } from '../context/context';
 import cn from 'classnames';
-// @ts-ignore
 import styles from './Display.module.css';
 
 const Display = () => {
