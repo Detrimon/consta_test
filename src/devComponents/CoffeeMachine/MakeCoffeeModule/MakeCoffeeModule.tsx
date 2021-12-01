@@ -4,6 +4,9 @@ import { coffeeMachineContext } from '../context/context';
 import {
   MIN_AMOUNT_OF_WATER_FOR_ONE_CUP,
   MAX_CUPS_BEFORE_CLEAN,
+  PERCENT_100,
+  TIMEOUT_BETWEEN_MAKING_COFFEE_COUNTS_MS,
+  NUMBER_OF_COUNTS_DURING_MAKING_COFFEE,
 } from '../constants/constants';
 
 import { typeDisplayValue } from '../commonLib/commonLib';
@@ -27,6 +30,7 @@ const MakeCoffeeModule = () => {
     setIsActionInProcess,
     setWaterAmountMl,
     setNumberOfCupsOfCoffeePrepared,
+    setCoffeePreparedInPercent,
   } = useContext(coffeeMachineContext);
 
   const makeCoffee = useCallback(
@@ -45,19 +49,27 @@ const MakeCoffeeModule = () => {
       setIsActionInProcess(true);
       typeDisplayValue(MSG_MAKING_COFFEE_IN_PROCESS, setDisplayValue)
         .then(() => {
-          const waterPart = MIN_AMOUNT_OF_WATER_FOR_ONE_CUP / 10;
+          const waterPart =
+            MIN_AMOUNT_OF_WATER_FOR_ONE_CUP /
+            NUMBER_OF_COUNTS_DURING_MAKING_COFFEE;
+          const coffeePart =
+            PERCENT_100 / (NUMBER_OF_COUNTS_DURING_MAKING_COFFEE * num);
           let counter = 0;
+          let _coffeePartInPercent = 0;
           let _waterAmountMl = waterAmountMl;
+
           return new Promise((resolve) => {
             const makeTimer = setInterval(() => {
-              if (counter >= 10 * num) {
+              if (counter >= NUMBER_OF_COUNTS_DURING_MAKING_COFFEE * num) {
                 resolve(true);
                 clearInterval(makeTimer);
               }
+              _coffeePartInPercent += coffeePart;
+              setCoffeePreparedInPercent(_coffeePartInPercent);
               _waterAmountMl -= waterPart;
               setWaterAmountMl(_waterAmountMl);
               counter++;
-            }, 500);
+            }, TIMEOUT_BETWEEN_MAKING_COFFEE_COUNTS_MS);
           });
         })
         .then(() => {

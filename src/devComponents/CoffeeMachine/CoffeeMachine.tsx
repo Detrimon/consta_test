@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import cn from 'classnames';
 import styles from './CoffeeMachine.module.css';
 import Button from './Button';
@@ -13,7 +13,11 @@ import { timeLag, typeDisplayValue } from './commonLib/commonLib';
 import { CoffeeMachineContextProvider } from './context/context';
 import { READY } from './constants/enums';
 
-import { MIN_AMOUNT_OF_WATER_FOR_ONE_CUP } from './constants/constants';
+import {
+  HEIGH_OF_COFFEE_BLOCK_IN_PIXEL,
+  MIN_AMOUNT_OF_WATER_FOR_ONE_CUP,
+  PERCENT_100,
+} from './constants/constants';
 
 import {
   MSG_LOW_WATER,
@@ -31,6 +35,8 @@ const CoffeeMachine = () => {
   const [numberOfCupsOfCoffeePrepared, setNumberOfCupsOfCoffeePrepared] =
     useState(4);
   const [displayValue, setDisplayValue] = useState<string>('');
+  const [coffeePreparedInPercent, setCoffeePreparedInPercent] =
+    useState<number>(0);
 
   const coffeeMachineInitialContext = {
     isSwitchOn,
@@ -38,11 +44,13 @@ const CoffeeMachine = () => {
     isActionInProcess,
     numberOfCupsOfCoffeePrepared,
     displayValue,
+    coffeePreparedInPercent,
     setIsSwitchOn,
     setWaterAmountMl,
     setIsActionInProcess,
     setNumberOfCupsOfCoffeePrepared,
     setDisplayValue,
+    setCoffeePreparedInPercent,
   };
 
   const switchMachine = useCallback(() => {
@@ -84,6 +92,12 @@ const CoffeeMachine = () => {
       });
   }, [isActionInProcess, isSwitchOn, waterAmountMl]);
 
+  const coffeeHeightInPercent = useMemo(
+    () =>
+      (coffeePreparedInPercent * HEIGH_OF_COFFEE_BLOCK_IN_PIXEL) / PERCENT_100,
+    [coffeePreparedInPercent]
+  );
+
   return (
     <CoffeeMachineContextProvider value={coffeeMachineInitialContext}>
       <div
@@ -100,6 +114,21 @@ const CoffeeMachine = () => {
           <WaterModule />
           <ClearModule />
           <Display />
+          <div className={styles.item_takeACoffee}>
+            <div
+              className={styles.takeACoffee_container}
+              style={{ height: `${coffeeHeightInPercent}px` }}
+            >
+              <div className={styles.takeACoffee_smoothLine}></div>
+              <img
+                src="../../assets/coffee.png"
+                width="120px"
+                height="100px"
+                alt="coffee"
+                className={styles.takeACoffee_image}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </CoffeeMachineContextProvider>

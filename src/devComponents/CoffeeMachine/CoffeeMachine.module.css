@@ -9,7 +9,7 @@
   grid-auto-flow: row;
 
   grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: 1fr 1fr 6fr;
+  grid-template-rows: 1fr 1fr 3fr 3fr;
 }
 
 .front__border {
@@ -25,4 +25,46 @@
 .front__border_active {
   border-color: rgb(77, 180, 214);
   transition: border 0.5s linear;
+}
+
+.item_takeACoffee {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  grid-column-start: 1;
+  grid-column-end: span 2;
+}
+
+.takeACoffee_container {
+  border-bottom: 8px solid #3b3b38;
+  border-radius: 8px;
+  width: 80%;
+
+  overflow: hidden;
+  position: absolute;
+  bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.takeACoffee_image {
+  position: absolute;
+  bottom: -3px;
+}
+
+.takeACoffee_smoothLine {
+  position: absolute;
+  background: linear-gradient(
+    180deg,
+    rgba(44, 44, 43, 1) 0%,
+    rgba(44, 44, 43, 0) 100%
+  );
+  opacity: 0.9;
+  top: 0;
+  width: 100%;
+  height: 15px;
+  z-index: 1000;
 }
